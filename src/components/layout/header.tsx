@@ -3,8 +3,8 @@ import { SiteHeader } from '@/components/layout/siteheader';
 
 const navItems = [
   { label: 'HOME', href: '/', active: true },
-  { label: 'SHOP', href: '/shop' },
-  { label: 'ORDERS', href: '/orders' },
+  { label: 'SHOP', href: '/product' },
+  { label: 'ABOUT', href: '/about' },
   { label: 'POLICIES', href: '/policies' },
 ];
 
