@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 
 export interface FooterLinkItem {
@@ -6,77 +7,111 @@ export interface FooterLinkItem {
   external?: boolean;
 }
 
-export interface FooterLinkGroup {
+export interface FooterColumn {
   title: string;
   links: FooterLinkItem[];
 }
 
 interface FooterProps {
   brand?: string;
+  description?: string;
   copyright?: string;
-  groups?: FooterLinkGroup[];
+  columns?: FooterColumn[];
   className?: string;
   containerClassName?: string;
+  logoSrc?: string;
+  logoAlt?: string;
 }
 
-const defaultGroups: FooterLinkGroup[] = [
+const defaultColumns: FooterColumn[] = [
   {
-    title: 'Services',
+    title: 'Navigation',
     links: [
-      { label: 'Sustainability', href: '/policies#sustainability' },
-      { label: 'Shipping & Returns', href: '/policies#shipping-returns' },
+      { label: 'Collections', href: '/collections' },
+      { label: 'Lookbook', href: '/lookbook' },
+      { label: 'Journal', href: '/journal' },
     ],
   },
   {
     title: 'Legal',
     links: [
+      { label: 'Sustainability', href: '/policies#sustainability' },
+      { label: 'Policies', href: '/policies' },
       { label: 'Privacy Policy', href: '/policies#privacy-policy' },
-      { label: 'Terms of Service', href: '/policies#terms' },
     ],
   },
   {
-    title: 'Help',
+    title: 'Contact',
     links: [
-      { label: 'Contact', href: '/policies#contact' },
-      { label: 'FAQ', href: '/policies#faq' },
+      { label: 'Email Us', href: '/contact' },
+      { label: 'FAQ', href: '/faq' },
     ],
   },
 ];
 
 export function Footer({
-  brand = '18 Studio',
+  brand = '18.STUDIO',
+  description = 'MODERN COLLECTOR, CONTEMPORARY ERA.',
   copyright = '© 2026 18 STUDIO. ALL RIGHTS RESERVED.',
-  groups = defaultGroups,
-  className = 'border-t border-zinc-200 py-12 sm:py-16',
-  containerClassName = 'grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-14',
+  columns = defaultColumns,
+  logoSrc = '/images/logo.png',
+  logoAlt = '18 Studio logo',
+  className = 'bg-[#f3f3f1] py-6 lg:py-8',
+  containerClassName = 'mx-auto w-full px-16 sm:px-8 lg:px-12',
 }: FooterProps) {
   return (
     <footer className={className}>
       <div className={containerClassName}>
-        <div className="space-y-4">
-          <p className="text-2xl font-semibold tracking-tight text-zinc-900">{brand}</p>
-          <p className="max-w-[18ch] text-[11px] uppercase tracking-[0.16em] text-zinc-500">{copyright}</p>
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4 lg:gap-x-20 xl:gap-x-24">
+          <div className="flex items-start gap-4">
+            <Image
+              src={logoSrc}
+              alt={logoAlt}
+              width={120}
+              height={40}
+              className="shrink-0 object-contain"
+            />
+
+            <div className="flex flex-col space-y-2">
+              <h2 className="text-[22px] font-semibold uppercase tracking-[-0.02em] text-zinc-950">
+                {brand}
+              </h2>
+
+              <p className="max-w-[220px] text-[12px] leading-[1.9] uppercase tracking-[0.16em] text-zinc-400">
+                {description}
+              </p>
+            </div>
+          </div>
+
+          {columns.map((column) => (
+            <div key={column.title} className="space-y-6">
+              <h3 className="text-[11px] font-semibold uppercase tracking-[0.24em] text-zinc-700">
+                {column.title}
+              </h3>
+
+              <ul className="space-y-5">
+                {column.links.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      href={link.href ?? '#'}
+                      target={link.external ? '_blank' : undefined}
+                      rel={link.external ? 'noreferrer' : undefined}
+                      className="text-[12px] uppercase tracking-[0.18em] text-zinc-400 transition-colors hover:text-zinc-900"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
 
-        {groups.map((group) => (
-          <div key={group.title} className="space-y-4">
-            <h3 className="text-[11px] font-medium uppercase tracking-[0.2em] text-zinc-500">{group.title}</h3>
-            <ul className="space-y-3">
-              {group.links.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    href={link.href ?? '#'}
-                    target={link.external ? '_blank' : undefined}
-                    rel={link.external ? 'noreferrer' : undefined}
-                    className="text-sm text-zinc-700 underline decoration-zinc-300 underline-offset-4 transition-colors hover:text-zinc-950"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+        <div className="mt-10 border-t border-zinc-200 pt-6">
+          <p className="text-[11px] uppercase tracking-[0.16em] text-zinc-400">
+            {copyright}
+          </p>
+        </div>
       </div>
     </footer>
   );
