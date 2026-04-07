@@ -16,7 +16,7 @@ export function ArchiveBannerSection() {
           </p>
           <Link
             href="/shop?collection=archive"
-            className="mt-9 inline-flex min-h-12 items-center justify-center border border-zinc-200 bg-white px-8 text-[0.68rem] font-semibold tracking-[0.2em] text-black transition hover:bg-zinc-200"
+            className="mt-9 inline-flex min-h-12 items-center justify-center border border-zinc-200 bg-black px-8 text-[0.68rem] font-semibold tracking-[0.2em] text-black transition hover:bg-zinc-200"
           >
             EXPLORE THE VAULT
           </Link>

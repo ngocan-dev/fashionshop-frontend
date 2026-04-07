@@ -26,7 +26,7 @@ export function HeroSection() {
           <div className="mt-8 flex flex-wrap gap-3 md:mt-10">
             <Link
               href="/products"
-              className="inline-flex min-h-12 items-center justify-center border border-zinc-950 bg-zinc-950 px-6 text-[0.68rem] font-semibold tracking-[0.2em] text-white transition hover:bg-zinc-800"
+              className="inline-flex min-h-12 items-center justify-center border border-zinc-950 bg-zinc-950 px-6 text-[0.68rem] font-semibold tracking-[0.2em] !text-white transition hover:bg-zinc-800"
             >
               SHOP THE COLLECTION
             </Link>
