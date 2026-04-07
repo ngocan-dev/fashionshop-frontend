@@ -1,0 +1,19 @@
+import Image from 'next/image';
+
+export function StudioAddress() {
+  return (
+    <section className="space-y-5 rounded-xl border border-zinc-200 bg-zinc-100 p-6 md:p-8">
+      <p className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-400">Studio Address</p>
+      <address className="not-italic text-4xl font-semibold leading-tight tracking-tight text-zinc-900 md:text-5xl">
+        Rue du Faubourg Saint-Honore 18
+        <br />
+        75008 Paris, France
+      </address>
+      <div className="overflow-hidden rounded-md border border-zinc-200">
+        <div className="relative aspect-[16/10]">
+          <Image src="/images/contact-studio.svg" alt="18.STUDIO Paris storefront" fill className="object-cover" />
+        </div>
+      </div>
+    </section>
+  );
+}
