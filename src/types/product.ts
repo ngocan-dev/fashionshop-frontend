@@ -10,6 +10,10 @@ export type Product = {
   name: string;
   description?: string;
   price: number;
+  color?: string;
+  size?: string;
+  colors?: string[];
+  sizes?: string[];
   compareAtPrice?: number;
   stock: number;
   categoryId?: string;
