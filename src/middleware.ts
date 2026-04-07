@@ -14,7 +14,7 @@ function isPublicPath(pathname: string) {
 function hasAccess(role: Role, pathname: string) {
   if (isPublicPath(pathname)) return true;
   if (role === 'ADMIN') return true;
-  if (role === 'STAFF') return staffPaths.some((path) => pathname === path || pathname.startsWith(`${path}/`)) || customerPaths.some((path) => pathname === path || pathname.startsWith(`${path}/`));
+  if (role === 'STAFF') return staffPaths.some((path) => pathname === path || pathname.startsWith(`${path}/`));
   if (role === 'CUSTOMER') return customerPaths.some((path) => pathname === path || pathname.startsWith(`${path}/`));
   return isPublicPath(pathname);
 }
@@ -51,7 +51,7 @@ export function middleware(request: NextRequest) {
 
   if (customerPaths.some((path) => pathname === path || pathname.startsWith(`${path}/`))) {
     if (!token) return NextResponse.redirect(new URL('/login', request.url));
-    if (!['CUSTOMER', 'STAFF', 'ADMIN'].includes(role)) return NextResponse.redirect(new URL('/forbidden', request.url));
+    if (!['CUSTOMER', 'ADMIN'].includes(role)) return NextResponse.redirect(new URL('/forbidden', request.url));
   }
 
   if (!isPublicPath(pathname) && !pathname.startsWith('/staff') && !pathname.startsWith('/admin') && !pathname.startsWith('/cart') && !pathname.startsWith('/wishlist') && !pathname.startsWith('/checkout') && !pathname.startsWith('/orders') && !pathname.startsWith('/account') && !pathname.startsWith('/invoices')) {

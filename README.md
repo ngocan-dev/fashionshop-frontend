@@ -50,5 +50,5 @@ npm run dev
 
 ## API mapping
 
-See the endpoint mapping in the final workspace output. The service layer lives under `src/features/*/services.ts` and the route protection lives in `src/middleware.ts`.
+See [docs/endpoint-mapping.md](docs/endpoint-mapping.md). The service layer lives under src/features/*/services.ts and route protection lives in src/middleware.ts.
 # fashionshop-frontend-
