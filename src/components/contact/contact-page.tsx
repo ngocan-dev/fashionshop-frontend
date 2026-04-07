@@ -12,15 +12,18 @@ export function ContactPageContent() {
       <div className="mx-auto w-full max-w-[1480px] px-4 md:px-8 lg:px-12">
         <ContactHero />
 
-        <div className="mt-10 grid grid-cols-1 gap-7 lg:mt-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.88fr)] lg:gap-8">
+        <div className="mt-10 grid grid-cols-1 gap-12 lg:mt-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.88fr)] lg:gap-14">
           <div>
             <ContactForm />
           </div>
 
-          <div className="space-y-7">
+          <div className="space-y-10">
             <ContactDetails />
+            <div className="border-t border-zinc-200" />
             <StudioAddress />
+            <div className="border-t border-zinc-200" />
             <ConnectLinks />
+            <div className="border-t border-zinc-200" />
             <AppointmentCta />
           </div>
         </div>

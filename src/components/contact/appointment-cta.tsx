@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export function AppointmentCta() {
   return (
-    <section className="space-y-5 rounded-xl border border-zinc-200 bg-zinc-100 p-6 md:p-8">
+    <section className="space-y-5">
       <p className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-400">Visit Our Space</p>
       <h3 className="text-5xl font-black leading-[0.95] tracking-tight text-zinc-900 md:text-6xl">Experience 18.STUDIO in person.</h3>
       <p className="max-w-xl text-lg leading-relaxed text-zinc-500">

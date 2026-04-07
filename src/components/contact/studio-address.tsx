@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 export function StudioAddress() {
   return (
-    <section className="space-y-5 rounded-xl border border-zinc-200 bg-zinc-100 p-6 md:p-8">
+    <section className="space-y-5">
       <p className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-400">Studio Address</p>
       <address className="not-italic text-4xl font-semibold leading-tight tracking-tight text-zinc-900 md:text-5xl">
         Rue du Faubourg Saint-Honore 18

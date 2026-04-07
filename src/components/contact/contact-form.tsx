@@ -5,18 +5,18 @@ const subjects = ['Order Inquiry', 'Product Availability', 'Private Appointment'
 
 export function ContactForm() {
   return (
-    <section className="rounded-xl border border-zinc-200 bg-zinc-100 p-6 md:p-8">
+    <section className="space-y-2">
       <h2 className="text-4xl font-bold tracking-tight text-zinc-900 md:text-5xl">Get in Touch</h2>
 
       <form className="mt-8 space-y-5" action="#" method="post">
         <label className="block space-y-2">
           <span className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-400">Name</span>
-          <Input name="name" placeholder="Enter your full name" aria-label="Name" className="rounded-none border-zinc-200 bg-zinc-100 focus:border-zinc-700 focus:ring-zinc-200" />
+          <Input name="name" placeholder="Enter your full name" aria-label="Name" className="rounded-none border-zinc-200 bg-transparent focus:border-zinc-700 focus:ring-zinc-200" />
         </label>
 
         <label className="block space-y-2">
           <span className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-400">Email</span>
-          <Input type="email" name="email" placeholder="hello@example.com" aria-label="Email" className="rounded-none border-zinc-200 bg-zinc-100 focus:border-zinc-700 focus:ring-zinc-200" />
+          <Input type="email" name="email" placeholder="hello@example.com" aria-label="Email" className="rounded-none border-zinc-200 bg-transparent focus:border-zinc-700 focus:ring-zinc-200" />
         </label>
 
         <label className="block space-y-2">
@@ -25,7 +25,7 @@ export function ContactForm() {
             <select
               name="subject"
               aria-label="Subject"
-              className="h-11 w-full appearance-none rounded-none border border-zinc-200 bg-zinc-100 px-3 text-base text-zinc-700 outline-none transition focus:border-zinc-700 focus:ring-2 focus:ring-zinc-200"
+              className="h-11 w-full appearance-none rounded-none border border-zinc-200 bg-transparent px-3 text-base text-zinc-700 outline-none transition focus:border-zinc-700 focus:ring-2 focus:ring-zinc-200"
               defaultValue="Order Inquiry"
             >
               {subjects.map((subject) => (
@@ -40,7 +40,7 @@ export function ContactForm() {
 
         <label className="block space-y-2">
           <span className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-400">Message</span>
-          <Textarea name="message" placeholder="Write your message here..." aria-label="Message" className="min-h-40 rounded-none border-zinc-200 bg-zinc-100 focus:border-zinc-700 focus:ring-zinc-200" />
+          <Textarea name="message" placeholder="Write your message here..." aria-label="Message" className="min-h-40 rounded-none border-zinc-200 bg-transparent focus:border-zinc-700 focus:ring-zinc-200" />
         </label>
 
         <button

@@ -9,7 +9,7 @@ const links = [
 
 export function ConnectLinks() {
   return (
-    <section className="space-y-4 rounded-xl border border-zinc-200 bg-zinc-100 p-6 md:p-8">
+    <section className="space-y-4">
       <p className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-400">Connect</p>
       <div className="flex flex-wrap gap-6">
         {links.map((link) => (
