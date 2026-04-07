@@ -1,10 +1,10 @@
+import { cn } from '@/lib/utils/cn';
+
 type Column<T> = {
   header: string;
   cell: (row: T) => React.ReactNode;
   className?: string;
 };
-
-import { cn } from '@/lib/utils/cn';
 
 type DataTableProps<T> = {
   columns: Column<T>[];

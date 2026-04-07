@@ -14,7 +14,7 @@ export default function CartPage() {
   const cartQuery = useCartQuery();
   const [confirmItemId, setConfirmItemId] = useState<string | null>(null);
   const deleteMutation = useDeleteCartItemMutation();
-  const quantityMutation = useUpdateCartItemQuantityMutation('');
+  const quantityMutation = useUpdateCartItemQuantityMutation();
 
   if (cartQuery.isLoading) return <LoadingState label="Loading cart" />;
   if (!cartQuery.data) return <EmptyState title="Cart is empty" description="Add products from the catalog to begin checkout." actionLabel="Browse products" actionHref="/products" icon={<ShoppingCart className="h-5 w-5" />} />;

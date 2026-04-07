@@ -39,7 +39,7 @@ export function useUpdateCartItemMutation(itemId: string) {
   });
 }
 
-export function useUpdateCartItemQuantityMutation(itemId: string) {
+export function useUpdateCartItemQuantityMutation() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ itemId: targetItemId, quantity }: { itemId: string; quantity: number }) => updateCartItemQuantity(targetItemId, quantity),
