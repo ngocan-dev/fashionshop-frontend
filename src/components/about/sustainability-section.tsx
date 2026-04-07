@@ -17,9 +17,9 @@ export function SustainabilitySection() {
         </p>
         <Link
           href="/policies"
-          className="inline-flex h-12 items-center justify-center rounded-sm border border-zinc-200 bg-zinc-100 px-8 text-xs font-semibold uppercase tracking-[0.2em] text-zinc-900 transition hover:bg-white"
+          className="inline-flex h-12 items-center justify-center rounded-sm border border-zinc-200 bg-zinc-100 px-8 text-xs !text-black font-semibold uppercase tracking-[0.2em] text-zinc-900 transition hover:bg-white"
         >
-          Read The 2024 Report
+          Read The 2026 Report
         </Link>
       </div>
     </section>

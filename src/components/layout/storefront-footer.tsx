@@ -72,7 +72,7 @@ export function StorefrontFooter() {
       </div>
 
       <div className="border-t border-[#dfdfe4] px-4 py-6 sm:px-6 lg:px-10 xl:px-12">
-        <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[#a1a1aa]">© 2024 18.STUDIO. All rights reserved.</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[#a1a1aa]">© 2026 18.STUDIO. All rights reserved.</p>
       </div>
     </footer>
   );
