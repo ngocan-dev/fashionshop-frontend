@@ -9,7 +9,7 @@ export function AssistanceCta() {
       </p>
       <Link
         href="/contact"
-        className="mt-8 inline-flex h-12 items-center justify-center border border-zinc-900 bg-zinc-900 px-8 text-xs font-semibold uppercase tracking-[0.22em] text-white transition hover:bg-zinc-800"
+        className="mt-8 inline-flex h-12 items-center justify-center border border-zinc-900 bg-zinc-900 px-8 text-xs font-semibold uppercase tracking-[0.22em] !text-white transition hover:bg-zinc-800"
       >
         Email Concierge
       </Link>

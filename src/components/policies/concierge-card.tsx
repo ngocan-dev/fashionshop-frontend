@@ -7,7 +7,7 @@ export function ConciergeCard() {
       <p className="mt-3 text-sm text-zinc-500">Dedicated assistance for private collectors, fittings, and bespoke support.</p>
       <Link
         href="/contact"
-        className="mt-6 inline-flex h-11 w-full items-center justify-center border border-zinc-900 bg-zinc-900 px-4 text-xs font-semibold uppercase tracking-[0.2em] text-white transition hover:bg-zinc-800"
+        className="mt-6 inline-flex h-11 w-full items-center justify-center border border-zinc-900 bg-zinc-900 px-4 text-xs font-semibold uppercase tracking-[0.2em] !text-white transition hover:bg-zinc-800"
       >
         Contact Us
       </Link>
