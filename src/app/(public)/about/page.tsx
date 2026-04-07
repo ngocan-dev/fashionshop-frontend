@@ -1,11 +1,16 @@
+import { ManifestoSection } from '@/components/about/manifesto-section';
+import { MaterialsSection } from '@/components/about/materials-section';
+import { StorySection } from '@/components/about/story-section';
+import { SustainabilitySection } from '@/components/about/sustainability-section';
+
 export default function AboutPage() {
   return (
-    <section className="container-shell py-10">
-      <div className="rounded-3xl border border-border bg-card p-6">
-        <h1 className="text-3xl font-semibold tracking-tight">About Us</h1>
-        <p className="mt-3 max-w-3xl text-sm text-muted-foreground">
-          FashionShop delivers modern apparel with a focus on quality, comfort, and reliable service.
-        </p>
+    <section className="bg-zinc-100 py-10 md:py-12 lg:py-16">
+      <div className="mx-auto w-full max-w-[1480px] space-y-14 px-4 md:space-y-16 md:px-8 lg:space-y-20 lg:px-12">
+        <ManifestoSection />
+        <StorySection />
+        <MaterialsSection />
+        <SustainabilitySection />
       </div>
     </section>
   );
