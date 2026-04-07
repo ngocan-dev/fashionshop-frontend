@@ -1,6 +1,7 @@
 import { api, apiRequest } from '@/lib/api/http';
 import type { ApiResponse } from '@/lib/api/types';
 import type { CheckoutSummary, CreateOrderRequest, Order } from '@/types/order';
+import type { Payment } from '@/types/payment';
 
 export async function fetchCheckoutSummary() {
   const response = await api.get<ApiResponse<CheckoutSummary>>('/api/orders/checkout-summary');
@@ -33,7 +34,7 @@ export async function fetchMyOrder(orderId: string) {
 }
 
 export async function fetchMyOrderPayment(orderId: string) {
-  const response = await api.get<ApiResponse<unknown>>(`/api/orders/my/${orderId}/payment`);
+  const response = await api.get<ApiResponse<Payment>>(`/api/orders/my/${orderId}/payment`);
   return apiRequest(Promise.resolve(response));
 }
 

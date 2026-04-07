@@ -20,7 +20,8 @@ export const productSchema = z.object({
   active: z.boolean().optional(),
 });
 
-export type ProductFormValues = z.infer<typeof productSchema>;
+export type ProductFormValues = z.input<typeof productSchema>;
+export type ProductFormSubmitValues = z.output<typeof productSchema>;
 
 type ProductFormProps = {
   initialValues?: Product | null;
@@ -29,7 +30,7 @@ type ProductFormProps = {
 };
 
 export function ProductForm({ initialValues, onSubmit, submitLabel = 'Save product' }: ProductFormProps) {
-  const form = useForm<ProductFormValues>({
+  const form = useForm<ProductFormValues, unknown, ProductFormSubmitValues>({
     resolver: zodResolver(productSchema),
     defaultValues: {
       name: initialValues?.name ?? '',

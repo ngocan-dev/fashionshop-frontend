@@ -1,4 +1,4 @@
-import type { FieldError, FieldValues, Path, UseFormRegister } from 'react-hook-form';
+import type { FieldValues, Path, UseFormRegister } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils/cn';
@@ -7,7 +7,7 @@ type FormFieldProps<TFormValues extends FieldValues> = {
   label: string;
   name: Path<TFormValues>;
   register: UseFormRegister<TFormValues>;
-  error?: FieldError;
+  error?: { message?: string };
   type?: string;
   placeholder?: string;
   textarea?: boolean;
