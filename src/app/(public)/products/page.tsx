@@ -1,11 +1,15 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { X } from 'lucide-react';
 import { EmptyState } from '@/components/common/empty-state';
 import { LoadingState } from '@/components/common/loading-state';
 import { Input } from '@/components/ui/input';
 import { ProductCard } from '@/features/products/components/product-card';
 import { useStoreProductsQuery, useProductSearchQuery } from '@/features/products/hooks';
+import { FilterSidebar } from '@/components/products/filters/filter-sidebar';
+import type { CategoryOption } from '@/components/products/filters/category-filter';
+import type { ColorOption } from '@/components/products/filters/color-filter';
 import type { Product } from '@/types/product';
 
 function normalizeProductColors(product: Product) {
@@ -20,39 +24,55 @@ function normalizeProductSizes(product: Product) {
 
 export default function ProductsPage() {
   const [keyword, setKeyword] = useState('');
-  const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(100000);
+  const [selectedCategory, setSelectedCategory] = useState('all-products');
+  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [selectedColor, setSelectedColor] = useState('all');
-  const [selectedSize, setSelectedSize] = useState('all');
+  const [priceRange, setPriceRange] = useState(2000);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   const storeQuery = useStoreProductsQuery();
   const searchQuery = useProductSearchQuery(keyword);
 
   const products = useMemo(() => (keyword ? searchQuery.data ?? [] : storeQuery.data ?? []), [keyword, searchQuery.data, storeQuery.data]);
 
-  const colorOptions = useMemo(() => {
-    const allColors = products.flatMap((product) => normalizeProductColors(product));
-    return Array.from(new Set(allColors)).sort((a, b) => a.localeCompare(b));
-  }, [products]);
+  const categoryOptions: CategoryOption[] = [
+    { id: 'all-products', label: 'All Products' },
+    { id: 'outerwear', label: 'Outerwear' },
+    { id: 'tailoring', label: 'Tailoring' },
+    { id: 'knitwear', label: 'Knitwear' },
+    { id: 'accessories', label: 'Accessories' },
+  ];
 
-  const sizeOptions = useMemo(() => {
-    const allSizes = products.flatMap((product) => normalizeProductSizes(product));
-    return Array.from(new Set(allSizes)).sort((a, b) => a.localeCompare(b));
-  }, [products]);
+  const sizeOptions: string[] = ['XS', 'S', 'M', 'L', 'XL'];
+
+  const colorOptions: ColorOption[] = [
+    { id: 'all', label: 'All', swatch: '#111111' },
+    { id: 'white', label: 'White', swatch: '#f4f4f5' },
+    { id: 'gray', label: 'Gray', swatch: '#8b8d96' },
+    { id: 'cream', label: 'Cream', swatch: '#d7d5d0' },
+    { id: 'black', label: 'Black', swatch: '#2a2a2d' },
+  ];
 
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
-      const inPriceRange = product.price >= minPrice && product.price <= maxPrice;
+      const inPriceRange = product.price >= 0 && product.price <= priceRange;
+
+      const categorySource = `${product.categoryName ?? ''} ${product.name}`.toLowerCase();
+      const categoryMatched = selectedCategory === 'all-products' || categorySource.includes(selectedCategory);
 
       const productColors = normalizeProductColors(product).map((value) => value.toLowerCase());
       const colorMatched = selectedColor === 'all' || productColors.includes(selectedColor.toLowerCase());
 
       const productSizes = normalizeProductSizes(product);
-      const sizeMatched = selectedSize === 'all' || productSizes.includes(selectedSize.toUpperCase());
+      const sizeMatched = selectedSizes.length === 0 || selectedSizes.some((size) => productSizes.includes(size));
 
-      return inPriceRange && colorMatched && sizeMatched;
+      return inPriceRange && categoryMatched && colorMatched && sizeMatched;
     });
-  }, [maxPrice, minPrice, products, selectedColor, selectedSize]);
+  }, [priceRange, products, selectedCategory, selectedColor, selectedSizes]);
+
+  const toggleSize = (size: string) => {
+    setSelectedSizes((current) => (current.includes(size) ? current.filter((item) => item !== size) : [...current, size]));
+  };
 
   const isLoading = keyword ? searchQuery.isLoading : storeQuery.isLoading;
   const isError = keyword ? searchQuery.isError : storeQuery.isError;
@@ -65,75 +85,83 @@ export default function ProductsPage() {
         <div className="mt-5 max-w-lg">
           <Input value={keyword} onChange={(event) => setKeyword(event.target.value)} placeholder="Search products" aria-label="Search products" />
         </div>
-
-        <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <label className="space-y-2">
-            <span className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Min Price</span>
-            <Input
-              type="number"
-              min={0}
-              max={100000}
-              value={minPrice}
-              onChange={(event) => setMinPrice(Math.max(0, Number(event.target.value) || 0))}
-              aria-label="Minimum price"
-            />
-          </label>
-
-          <label className="space-y-2">
-            <span className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Max Price</span>
-            <Input
-              type="number"
-              min={0}
-              max={100000}
-              value={maxPrice}
-              onChange={(event) => setMaxPrice(Math.min(100000, Number(event.target.value) || 100000))}
-              aria-label="Maximum price"
-            />
-          </label>
-
-          <label className="space-y-2">
-            <span className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Color</span>
-            <select
-              value={selectedColor}
-              onChange={(event) => setSelectedColor(event.target.value)}
-              aria-label="Filter by color"
-              className="h-11 w-full rounded-2xl border border-input bg-background px-4 text-sm outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
-            >
-              <option value="all">All colors</option>
-              {colorOptions.map((color) => (
-                <option key={color} value={color}>
-                  {color}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <label className="space-y-2">
-            <span className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Size</span>
-            <select
-              value={selectedSize}
-              onChange={(event) => setSelectedSize(event.target.value)}
-              aria-label="Filter by size"
-              className="h-11 w-full rounded-2xl border border-input bg-background px-4 text-sm outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
-            >
-              <option value="all">All sizes</option>
-              {sizeOptions.map((size) => (
-                <option key={size} value={size}>
-                  {size}
-                </option>
-              ))}
-            </select>
-          </label>
+        <div className="mt-5 lg:hidden">
+          <button
+            type="button"
+            onClick={() => setMobileFiltersOpen(true)}
+            className="h-11 rounded-md border border-zinc-300 bg-white px-5 text-xs font-semibold uppercase tracking-[0.2em] text-zinc-800 transition hover:bg-zinc-100"
+          >
+            Open Filters
+          </button>
         </div>
       </div>
 
-      {isLoading ? <LoadingState label="Loading products" /> : null}
-      {!isLoading && isError ? <EmptyState title="Unable to load products" description="Please try again." actionLabel="Refresh" actionHref="/products" /> : null}
-      {!isLoading && !isError && filteredProducts.length === 0 ? <EmptyState title="No products found" description="Try a different filter or search term." actionLabel="Back to home" actionHref="/" /> : null}
+      <div className="grid gap-8 lg:grid-cols-[290px_minmax(0,1fr)]">
+        <div className="hidden lg:block">
+          <div className="sticky top-24">
+            <FilterSidebar
+              categoryOptions={categoryOptions}
+              sizeOptions={sizeOptions}
+              colorOptions={colorOptions}
+              selectedCategory={selectedCategory}
+              selectedSizes={selectedSizes}
+              selectedColor={selectedColor}
+              priceRange={priceRange}
+              onCategoryChange={setSelectedCategory}
+              onToggleSize={toggleSize}
+              onColorChange={setSelectedColor}
+              onPriceChange={setPriceRange}
+              minPrice={0}
+              maxPrice={2000}
+            />
+          </div>
+        </div>
 
-      <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
-        {filteredProducts.map((product) => <ProductCard key={product.id} product={product} />)}
+        <div>
+          {isLoading ? <LoadingState label="Loading products" /> : null}
+          {!isLoading && isError ? <EmptyState title="Unable to load products" description="Please try again." actionLabel="Refresh" actionHref="/products" /> : null}
+          {!isLoading && !isError && filteredProducts.length === 0 ? <EmptyState title="No products found" description="Try a different filter or search term." actionLabel="Back to home" actionHref="/" /> : null}
+
+          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+            {filteredProducts.map((product) => <ProductCard key={product.id} product={product} />)}
+          </div>
+        </div>
       </div>
+
+      {mobileFiltersOpen ? (
+        <div className="fixed inset-0 z-50 bg-black/35 lg:hidden">
+          <div className="absolute left-0 top-0 h-full w-[min(90vw,320px)] overflow-y-auto bg-white p-4">
+            <div className="mb-4 flex items-center justify-between">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-zinc-700">Filters</p>
+              <button
+                type="button"
+                aria-label="Close filters"
+                onClick={() => setMobileFiltersOpen(false)}
+                className="rounded-full p-2 text-zinc-700 hover:bg-zinc-100"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <FilterSidebar
+              categoryOptions={categoryOptions}
+              sizeOptions={sizeOptions}
+              colorOptions={colorOptions}
+              selectedCategory={selectedCategory}
+              selectedSizes={selectedSizes}
+              selectedColor={selectedColor}
+              priceRange={priceRange}
+              onCategoryChange={setSelectedCategory}
+              onToggleSize={toggleSize}
+              onColorChange={setSelectedColor}
+              onPriceChange={setPriceRange}
+              minPrice={0}
+              maxPrice={2000}
+            />
+          </div>
+          <button type="button" className="h-full w-full" aria-label="Close filters" onClick={() => setMobileFiltersOpen(false)} />
+        </div>
+      ) : null}
     </div>
   );
 }
