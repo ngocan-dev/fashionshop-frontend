@@ -42,10 +42,10 @@
     <rect x="1216" y="110" width="12" height="780" fill="#B3B3AB"/>
     <rect x="1244" y="110" width="12" height="780" fill="#7F7F79"/>
     <rect x="1272" y="110" width="12" height="780" fill="#909089"/>
-+    <rect x="1300" y="110" width="12" height="780" fill="#A5A59D"/>
-+    <rect x="1328" y="110" width="12" height="780" fill="#7A7A74"/>
-+    <rect x="1356" y="110" width="12" height="780" fill="#8C8C85"/>
-+    <rect x="1384" y="110" width="12" height="780" fill="#A2A29A"/>
+  <rect x="1300" y="110" width="12" height="780" fill="#A5A59D"/>
+  <rect x="1328" y="110" width="12" height="780" fill="#7A7A74"/>
+  <rect x="1356" y="110" width="12" height="780" fill="#8C8C85"/>
+  <rect x="1384" y="110" width="12" height="780" fill="#A2A29A"/>
   </g>
   <rect x="110" y="80" width="1380" height="840" rx="18" fill="url(#fade)"/>
   <defs>
