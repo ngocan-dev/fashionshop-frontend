@@ -6,7 +6,7 @@ export function HeroSection() {
     <section className="border-b border-zinc-300 bg-zinc-100">
       <div className="relative mx-auto min-h-[70svh] w-full max-w-[1440px] px-6 py-10 md:min-h-[82svh] md:px-8 lg:px-12">
         <Image
-          src="/images/hero-fashion.jpg"
+          src="/images/hero-fashion.svg"
           alt="18 STUDIO campaign look"
           fill
           priority
@@ -25,13 +25,13 @@ export function HeroSection() {
 
           <div className="mt-8 flex flex-wrap gap-3 md:mt-10">
             <Link
-              href="/shop"
+              href="/products"
               className="inline-flex min-h-12 items-center justify-center border border-zinc-950 bg-zinc-950 px-6 text-[0.68rem] font-semibold tracking-[0.2em] text-white transition hover:bg-zinc-800"
             >
               SHOP THE COLLECTION
             </Link>
             <Link
-              href="/lookbook"
+              href="/products"
               className="inline-flex min-h-12 items-center justify-center border border-zinc-100/50 bg-white/8 px-6 text-[0.68rem] font-semibold tracking-[0.2em] text-white backdrop-blur-sm transition hover:bg-white/15"
             >
               VIEW LOOKBOOK
