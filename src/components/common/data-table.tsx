@@ -4,6 +4,8 @@ type Column<T> = {
   className?: string;
 };
 
+import { cn } from '@/lib/utils/cn';
+
 type DataTableProps<T> = {
   columns: Column<T>[];
   data: T[];

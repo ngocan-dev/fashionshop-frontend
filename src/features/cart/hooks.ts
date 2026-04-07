@@ -42,7 +42,7 @@ export function useUpdateCartItemMutation(itemId: string) {
 export function useUpdateCartItemQuantityMutation(itemId: string) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (quantity: number) => updateCartItemQuantity(itemId, quantity),
+    mutationFn: ({ itemId: targetItemId, quantity }: { itemId: string; quantity: number }) => updateCartItemQuantity(targetItemId, quantity),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: queryKeys.cart });
       await queryClient.invalidateQueries({ queryKey: queryKeys.cartSummary });
