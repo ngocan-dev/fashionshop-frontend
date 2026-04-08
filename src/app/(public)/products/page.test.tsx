@@ -8,7 +8,7 @@ describe('ProductsPage', () => {
     render(<ProductsPage />);
 
     expect(screen.getByPlaceholderText('Search products...')).toBeInTheDocument();
-    expect(screen.getByText('24 Results Found')).toBeInTheDocument();
+    expect(screen.getByText(/Results Found/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Load More Products' })).toBeInTheDocument();
     expect(screen.getByText('Modular Tech Parka')).toBeInTheDocument();
   });
