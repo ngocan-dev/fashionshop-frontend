@@ -3,24 +3,16 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LogOut, UserRound } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { clearSessionAndRedirect, useAuthSession } from '@/features/auth/store';
+import { AccountMenu } from './account-menu';
 
-const guestNavItems = [
+const navItems = [
   { label: 'Home', href: '/' },
   { label: 'Shop', href: '/products' },
   { label: 'About Us', href: '/about' },
   { label: 'Contact', href: '/contact' },
   { label: 'Policies', href: '/policies' },
-] as const;
-
-const customerNavItems = [
-  { label: 'Home', href: '/' },
-  { label: 'Shop', href: '/products' },
-  { label: 'Cart', href: '/cart' },
-  { label: 'Orders', href: '/orders' },
-  { label: 'Profile', href: '/account' },
 ] as const;
 
 function isActivePath(pathname: string, href: string) {
@@ -33,7 +25,6 @@ export function StorefrontHeader() {
   const router = useRouter();
   const session = useAuthSession();
   const isLoggedIn = Boolean(session.token);
-  const navItems = isLoggedIn ? customerNavItems : guestNavItems;
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/70 bg-background/95 backdrop-blur">
@@ -62,23 +53,7 @@ export function StorefrontHeader() {
           </nav>
 
           <div className="flex items-center justify-self-end gap-1 sm:gap-2">
-            {isLoggedIn ? (
-              <button
-                type="button"
-                onClick={() => clearSessionAndRedirect(router)}
-                aria-label="Log out"
-                className="inline-flex h-9 w-9 items-center justify-center rounded-full text-foreground/80 transition-colors hover:bg-muted hover:text-foreground"
-              >
-                <LogOut className="h-4 w-4" />
-              </button>
-            ) : null}
-            <Link
-              href="/account"
-              aria-label="View Profile"
-              className="inline-flex h-9 w-9 items-center justify-center rounded-full text-foreground/80 transition-colors hover:bg-muted hover:text-foreground"
-            >
-              <UserRound className="h-4 w-4" />
-            </Link>
+            <AccountMenu isLoggedIn={isLoggedIn} onLogout={() => clearSessionAndRedirect(router)} />
           </div>
         </div>
 
