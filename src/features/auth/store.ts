@@ -2,6 +2,7 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { useShallow } from 'zustand/react/shallow';
 import type { AuthSession } from '@/types/auth';
 import type { AuthUser } from '@/types/common';
 import { clearStoredSession, setStoredSession } from '@/lib/auth/storage';
@@ -39,7 +40,13 @@ export const useAuthStore = create<AuthState>()(
 );
 
 export function useAuthSession() {
-  return useAuthStore((state) => ({ token: state.token, user: state.user, hydrated: state.hydrated }));
+  return useAuthStore(
+    useShallow((state) => ({
+      token: state.token,
+      user: state.user,
+      hydrated: state.hydrated,
+    })),
+  );
 }
 
 export function clearSessionAndRedirect(router?: { replace: (path: string) => void }) {

@@ -1,9 +1,13 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { AuthTabs, type AuthTab } from './auth-tabs';
 import { LoginForm, type LoginErrors, type LoginValues } from './login-form';
 import { RegisterForm, type RegisterErrors, type RegisterValues } from './register-form';
+import { useAuthStore } from '@/features/auth/store';
+import { redirectForRole } from '@/lib/auth/permissions';
+import type { Role } from '@/lib/constants/roles';
 
 type AuthPageProps = {
   initialTab?: AuthTab;
@@ -26,12 +30,31 @@ function validateEmail(value: string) {
 }
 
 export function AuthPage({ initialTab = 'login' }: AuthPageProps) {
+  const router = useRouter();
+  const setSession = useAuthStore((state) => state.setSession);
   const [activeTab, setActiveTab] = useState<AuthTab>(initialTab);
   const [loginValues, setLoginValues] = useState<LoginValues>(initialLoginValues);
   const [registerValues, setRegisterValues] = useState<RegisterValues>(initialRegisterValues);
   const [loginErrors, setLoginErrors] = useState<LoginErrors>({});
   const [registerErrors, setRegisterErrors] = useState<RegisterErrors>({});
   const [statusMessage, setStatusMessage] = useState('');
+  const showDevRoleLogin = process.env.NODE_ENV !== 'production' && process.env.NEXT_PUBLIC_ENABLE_DEV_ROLE_LOGIN !== 'false';
+
+  function loginAsRole(role: Role) {
+    const session = {
+      accessToken: `dev-${role.toLowerCase()}-token`,
+      refreshToken: 'dev-refresh-token',
+      user: {
+        id: `dev-${role.toLowerCase()}-user`,
+        email: `${role.toLowerCase()}@local.dev`,
+        fullName: `Dev ${role}`,
+        role,
+      },
+    };
+
+    setSession(session);
+    router.replace(redirectForRole(role));
+  }
 
   function handleLogin() {
     setStatusMessage('Login request ready.');
@@ -136,6 +159,35 @@ export function AuthPage({ initialTab = 'login' }: AuthPageProps) {
               />
             )}
           </div>
+
+          {showDevRoleLogin ? (
+            <div className="mt-6 border-t border-zinc-200 pt-5">
+              <p className="text-center text-[0.66rem] font-semibold uppercase tracking-[0.24em] text-zinc-400">Dev Quick Access</p>
+              <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-3">
+                <button
+                  type="button"
+                  onClick={() => loginAsRole('CUSTOMER')}
+                  className="h-10 border border-zinc-300 bg-white px-3 text-[0.64rem] font-semibold uppercase tracking-[0.2em] text-zinc-700 transition hover:border-zinc-500 hover:text-zinc-900"
+                >
+                  Customer
+                </button>
+                <button
+                  type="button"
+                  onClick={() => loginAsRole('STAFF')}
+                  className="h-10 border border-zinc-300 bg-white px-3 text-[0.64rem] font-semibold uppercase tracking-[0.2em] text-zinc-700 transition hover:border-zinc-500 hover:text-zinc-900"
+                >
+                  Staff
+                </button>
+                <button
+                  type="button"
+                  onClick={() => loginAsRole('ADMIN')}
+                  className="h-10 border border-zinc-300 bg-white px-3 text-[0.64rem] font-semibold uppercase tracking-[0.2em] text-zinc-700 transition hover:border-zinc-500 hover:text-zinc-900"
+                >
+                  Admin
+                </button>
+              </div>
+            </div>
+          ) : null}
 
           {statusMessage ? <p className="mt-5 text-center text-xs font-medium uppercase tracking-[0.22em] text-zinc-500">{statusMessage}</p> : null}
         </div>
