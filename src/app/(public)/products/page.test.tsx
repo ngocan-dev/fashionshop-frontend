@@ -1,16 +1,15 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
-
-vi.mock('@/features/products/hooks', () => ({
-  useStoreProductsQuery: () => ({ data: [{ id: '1', name: 'Test Product', price: 99, stock: 1, images: [] }], isLoading: false, isError: false }),
-  useProductSearchQuery: () => ({ data: [], isLoading: false, isError: false }),
-}));
+import { describe, expect, it } from 'vitest';
 
 import ProductsPage from './page';
 
 describe('ProductsPage', () => {
   it('renders the product listing page', () => {
     render(<ProductsPage />);
-    expect(screen.getByText('Products')).toBeInTheDocument();
+
+    expect(screen.getByPlaceholderText('Search products...')).toBeInTheDocument();
+    expect(screen.getByText('24 Results Found')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Load More Products' })).toBeInTheDocument();
+    expect(screen.getByText('Modular Tech Parka')).toBeInTheDocument();
   });
 });

@@ -1,167 +1,142 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { X } from 'lucide-react';
-import { EmptyState } from '@/components/common/empty-state';
-import { LoadingState } from '@/components/common/loading-state';
-import { Input } from '@/components/ui/input';
-import { ProductCard } from '@/features/products/components/product-card';
-import { useStoreProductsQuery, useProductSearchQuery } from '@/features/products/hooks';
-import { FilterSidebar } from '@/components/products/filters/filter-sidebar';
-import type { CategoryOption } from '@/components/products/filters/category-filter';
-import type { ColorOption } from '@/components/products/filters/color-filter';
-import type { Product } from '@/types/product';
+import { ProductFilters } from '@/components/products/listing/product-filters';
+import { ProductGrid } from '@/components/products/listing/product-grid';
+import { ProductToolbar } from '@/components/products/listing/product-toolbar';
+import type { ProductListingItem, ProductSortOption } from '@/components/products/listing/types';
 
-function normalizeProductColors(product: Product) {
-  const values = [product.color, ...(product.colors ?? [])].filter(Boolean) as string[];
-  return Array.from(new Set(values.map((value) => value.trim())));
-}
+const productCatalog: ProductListingItem[] = [
+  { id: 'modular-tech-parka', name: 'Modular Tech Parka', category: 'Outerwear', price: 840, imageSrc: '/images/product-blazer.svg', imageAlt: 'Modular Tech Parka in technical orange and charcoal', color: 'black', size: 'M' },
+  { id: 'boxy-sculptural-blazer', name: 'Boxy Sculptural Blazer', category: 'Tailoring', price: 1250, imageSrc: '/images/product-blazer.svg', imageAlt: 'Boxy Sculptural Blazer in structured gray tailoring', color: 'gray', size: 'S' },
+  { id: 'archival-cargo-trousers', name: 'Archival Cargo Trousers', category: 'Bottoms', price: 560, imageSrc: '/images/product-trousers.svg', imageAlt: 'Archival Cargo Trousers in washed green denim', color: 'dark-brown', size: 'L' },
+  { id: 'oversized-ribbed-knit', name: 'Oversized Ribbed Knit', category: 'Knitwear', price: 720, imageSrc: '/images/product-shirt.svg', imageAlt: 'Oversized Ribbed Knit in deep teal', color: 'off-white', size: 'XL' },
+  { id: 'tactical-layering-vest', name: 'Tactical Layering Vest', category: 'Outerwear', price: 440, imageSrc: '/images/product-blazer.svg', imageAlt: 'Tactical Layering Vest in high-visibility orange', color: 'black', size: 'M' },
+  { id: 'fluid-silk-shirt', name: 'Fluid Silk Shirt', category: 'Tailoring', price: 380, imageSrc: '/images/product-shirt.svg', imageAlt: 'Fluid Silk Shirt in muted rose satin', color: 'light-gray', size: 'S' },
+  { id: 'architectural-shell-coat', name: 'Architectural Shell Coat', category: 'Outerwear', price: 1180, imageSrc: '/images/product-blazer.svg', imageAlt: 'Architectural Shell Coat with sharp silhouette', color: 'gray', size: 'L' },
+  { id: 'narrow-pleat-trousers', name: 'Narrow Pleat Trousers', category: 'Bottoms', price: 610, imageSrc: '/images/product-trousers.svg', imageAlt: 'Narrow Pleat Trousers in dark green', color: 'dark-brown', size: 'M' },
+  { id: 'merino-column-knit', name: 'Merino Column Knit', category: 'Knitwear', price: 690, imageSrc: '/images/product-shirt.svg', imageAlt: 'Merino Column Knit in teal ribbing', color: 'off-white', size: 'XS' },
+  { id: 'technical-trench-layer', name: 'Technical Trench Layer', category: 'Outerwear', price: 920, imageSrc: '/images/product-blazer.svg', imageAlt: 'Technical Trench Layer with storm-ready panels', color: 'black', size: 'XL' },
+  { id: 'sculpted-tailoring-jacket', name: 'Sculpted Tailoring Jacket', category: 'Tailoring', price: 980, imageSrc: '/images/product-blazer.svg', imageAlt: 'Sculpted Tailoring Jacket in charcoal melange', color: 'gray', size: 'M' },
+  { id: 'utility-canvas-trousers', name: 'Utility Canvas Trousers', category: 'Bottoms', price: 510, imageSrc: '/images/product-trousers.svg', imageAlt: 'Utility Canvas Trousers in faded olive', color: 'dark-brown', size: 'L' },
+  { id: 'ribbed-layer-tee', name: 'Ribbed Layer Tee', category: 'Knitwear', price: 260, imageSrc: '/images/product-shirt.svg', imageAlt: 'Ribbed Layer Tee in washed slate', color: 'light-gray', size: 'S' },
+  { id: 'canvas-overcoat', name: 'Canvas Overcoat', category: 'Outerwear', price: 1040, imageSrc: '/images/product-blazer.svg', imageAlt: 'Canvas Overcoat with an oversized cut', color: 'black', size: 'L' },
+  { id: 'pressed-wool-blazer', name: 'Pressed Wool Blazer', category: 'Tailoring', price: 1320, imageSrc: '/images/product-blazer.svg', imageAlt: 'Pressed Wool Blazer in precise gray tailoring', color: 'gray', size: 'M' },
+  { id: 'archival-straight-jeans', name: 'Archival Straight Jeans', category: 'Bottoms', price: 540, imageSrc: '/images/product-trousers.svg', imageAlt: 'Archival Straight Jeans in deep washed green', color: 'dark-brown', size: 'S' },
+  { id: 'textured-wool-pullover', name: 'Textured Wool Pullover', category: 'Knitwear', price: 760, imageSrc: '/images/product-shirt.svg', imageAlt: 'Textured Wool Pullover in forest teal', color: 'off-white', size: 'M' },
+  { id: 'reflective-panel-parka', name: 'Reflective Panel Parka', category: 'Outerwear', price: 890, imageSrc: '/images/product-blazer.svg', imageAlt: 'Reflective Panel Parka with safety striping', color: 'black', size: 'XL' },
+  { id: 'soft-shoulder-jacket', name: 'Soft Shoulder Jacket', category: 'Tailoring', price: 1150, imageSrc: '/images/product-blazer.svg', imageAlt: 'Soft Shoulder Jacket with a relaxed drape', color: 'light-gray', size: 'S' },
+  { id: 'relaxed-cargo-trousers', name: 'Relaxed Cargo Trousers', category: 'Bottoms', price: 590, imageSrc: '/images/product-trousers.svg', imageAlt: 'Relaxed Cargo Trousers in dark moss denim', color: 'dark-brown', size: 'M' },
+  { id: 'longline-rib-knit', name: 'Longline Rib Knit', category: 'Knitwear', price: 680, imageSrc: '/images/product-shirt.svg', imageAlt: 'Longline Rib Knit in warm charcoal green', color: 'gray', size: 'L' },
+  { id: 'panelled-field-coat', name: 'Panelled Field Coat', category: 'Outerwear', price: 960, imageSrc: '/images/product-blazer.svg', imageAlt: 'Panelled Field Coat in a technical finish', color: 'black', size: 'M' },
+  { id: 'silk-drape-shirt', name: 'Silk Drape Shirt', category: 'Tailoring', price: 420, imageSrc: '/images/product-shirt.svg', imageAlt: 'Silk Drape Shirt in muted satin brown', color: 'off-white', size: 'XS' },
+];
 
-function normalizeProductSizes(product: Product) {
-  const values = [product.size, ...(product.sizes ?? [])].filter(Boolean) as string[];
-  return Array.from(new Set(values.map((value) => value.trim().toUpperCase())));
+function sortProducts(products: ProductListingItem[], sortBy: ProductSortOption) {
+  const list = [...products];
+
+  if (sortBy === 'Price: Low to High') {
+    return list.sort((left, right) => left.price - right.price);
+  }
+
+  if (sortBy === 'Price: High to Low') {
+    return list.sort((left, right) => right.price - left.price);
+  }
+
+  if (sortBy === 'Category') {
+    return list.sort((left, right) => left.category.localeCompare(right.category) || left.name.localeCompare(right.name));
+  }
+
+  return list;
 }
 
 export default function ProductsPage() {
-  const [keyword, setKeyword] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all-products');
-  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
-  const [selectedColor, setSelectedColor] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<'All Products' | ProductListingItem['category']>('All Products');
+  const [selectedSize, setSelectedSize] = useState('');
+  const [selectedColor, setSelectedColor] = useState('');
   const [priceRange, setPriceRange] = useState(2000);
-  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-
-  const storeQuery = useStoreProductsQuery();
-  const searchQuery = useProductSearchQuery(keyword);
-
-  const products = useMemo(() => (keyword ? searchQuery.data ?? [] : storeQuery.data ?? []), [keyword, searchQuery.data, storeQuery.data]);
-
-  const categoryOptions: CategoryOption[] = [
-    { id: 'all-products', label: 'All Products' },
-    { id: 'outerwear', label: 'Outerwear' },
-    { id: 'tailoring', label: 'Tailoring' },
-    { id: 'knitwear', label: 'Knitwear' },
-    { id: 'accessories', label: 'Accessories' },
-  ];
-
-  const sizeOptions: string[] = ['XS', 'S', 'M', 'L', 'XL'];
-
-  const colorOptions: ColorOption[] = [
-    { id: 'all', label: 'All', swatch: '#111111' },
-    { id: 'white', label: 'White', swatch: '#f4f4f5' },
-    { id: 'gray', label: 'Gray', swatch: '#8b8d96' },
-    { id: 'cream', label: 'Cream', swatch: '#d7d5d0' },
-    { id: 'black', label: 'Black', swatch: '#2a2a2d' },
-  ];
+  const [sortBy, setSortBy] = useState<ProductSortOption>('Newest Arrivals');
+  const [visibleCount, setVisibleCount] = useState(6);
 
   const filteredProducts = useMemo(() => {
-    return products.filter((product) => {
-      const inPriceRange = product.price >= 0 && product.price <= priceRange;
+    const keyword = searchTerm.trim().toLowerCase();
 
-      const categorySource = `${product.categoryName ?? ''} ${product.name}`.toLowerCase();
-      const categoryMatched = selectedCategory === 'all-products' || categorySource.includes(selectedCategory);
+    const filtered = productCatalog.filter((product) => {
+      const matchesSearch = !keyword || [product.name, product.category, product.color, product.size].some((value) => value.toLowerCase().includes(keyword));
+      const matchesCategory = selectedCategory === 'All Products' || product.category === selectedCategory;
+      const matchesSize = !selectedSize || product.size === selectedSize;
+      const matchesColor = !selectedColor || product.color === selectedColor;
+      const matchesPrice = product.price <= priceRange;
 
-      const productColors = normalizeProductColors(product).map((value) => value.toLowerCase());
-      const colorMatched = selectedColor === 'all' || productColors.includes(selectedColor.toLowerCase());
-
-      const productSizes = normalizeProductSizes(product);
-      const sizeMatched = selectedSizes.length === 0 || selectedSizes.some((size) => productSizes.includes(size));
-
-      return inPriceRange && categoryMatched && colorMatched && sizeMatched;
+      return matchesSearch && matchesCategory && matchesSize && matchesColor && matchesPrice;
     });
-  }, [priceRange, products, selectedCategory, selectedColor, selectedSizes]);
 
-  const toggleSize = (size: string) => {
-    setSelectedSizes((current) => (current.includes(size) ? current.filter((item) => item !== size) : [...current, size]));
-  };
+    return sortProducts(filtered, sortBy);
+  }, [priceRange, searchTerm, selectedCategory, selectedColor, selectedSize, sortBy]);
 
-  const isLoading = keyword ? searchQuery.isLoading : storeQuery.isLoading;
-  const isError = keyword ? searchQuery.isError : storeQuery.isError;
+  const visibleProducts = useMemo(() => filteredProducts.slice(0, visibleCount), [filteredProducts, visibleCount]);
+  const hasMore = visibleCount < filteredProducts.length;
 
   return (
-    <div className="container-shell space-y-6 py-10">
-      <div className="rounded-3xl border border-border bg-card p-6">
-        <h1 className="text-3xl font-semibold tracking-tight">Products</h1>
-        <p className="mt-2 text-sm text-muted-foreground">Search the store catalog and open any product detail page.</p>
-        <div className="mt-5 max-w-lg">
-          <Input value={keyword} onChange={(event) => setKeyword(event.target.value)} placeholder="Search products" aria-label="Search products" />
-        </div>
-        <div className="mt-5 lg:hidden">
-          <button
-            type="button"
-            onClick={() => setMobileFiltersOpen(true)}
-            className="h-11 rounded-md border border-zinc-300 bg-white px-5 text-xs font-semibold uppercase tracking-[0.2em] text-zinc-800 transition hover:bg-zinc-100"
-          >
-            Open Filters
-          </button>
-        </div>
-      </div>
-
-      <div className="grid gap-8 lg:grid-cols-[290px_minmax(0,1fr)]">
-        <div className="hidden lg:block">
-          <div className="sticky top-24">
-            <FilterSidebar
-              categoryOptions={categoryOptions}
-              sizeOptions={sizeOptions}
-              colorOptions={colorOptions}
+    <main className="min-h-screen bg-[#f6f6f3] text-zinc-900">
+      <div className="mx-auto max-w-[1520px] px-4 py-6 sm:px-6 lg:px-10 lg:py-10">
+        <div className="grid gap-8 lg:grid-cols-[250px_minmax(0,1fr)] lg:gap-12">
+          <div className="lg:sticky lg:top-8 lg:self-start">
+            <ProductFilters
               selectedCategory={selectedCategory}
-              selectedSizes={selectedSizes}
+              selectedSize={selectedSize}
               selectedColor={selectedColor}
               priceRange={priceRange}
-              onCategoryChange={setSelectedCategory}
-              onToggleSize={toggleSize}
-              onColorChange={setSelectedColor}
-              onPriceChange={setPriceRange}
-              minPrice={0}
-              maxPrice={2000}
+              onCategoryChange={(value) => {
+                setSelectedCategory(value);
+                setVisibleCount(6);
+              }}
+              onSizeChange={(value) => {
+                setSelectedSize(value);
+                setVisibleCount(6);
+              }}
+              onColorChange={(value) => {
+                setSelectedColor(value);
+                setVisibleCount(6);
+              }}
+              onPriceChange={(value) => {
+                setPriceRange(value);
+                setVisibleCount(6);
+              }}
             />
           </div>
-        </div>
 
-        <div>
-          {isLoading ? <LoadingState label="Loading products" /> : null}
-          {!isLoading && isError ? <EmptyState title="Unable to load products" description="Please try again." actionLabel="Refresh" actionHref="/products" /> : null}
-          {!isLoading && !isError && filteredProducts.length === 0 ? <EmptyState title="No products found" description="Try a different filter or search term." actionLabel="Back to home" actionHref="/" /> : null}
+          <section className="space-y-8 pt-1">
+            <ProductToolbar
+              searchTerm={searchTerm}
+              resultCount={filteredProducts.length}
+              sortBy={sortBy}
+              onSearchChange={(value) => {
+                setSearchTerm(value);
+                setVisibleCount(6);
+              }}
+              onSortChange={(value) => {
+                setSortBy(value);
+                setVisibleCount(6);
+              }}
+            />
 
-          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-            {filteredProducts.map((product) => <ProductCard key={product.id} product={product} />)}
-          </div>
+            {filteredProducts.length > 0 ? (
+              <ProductGrid
+                products={filteredProducts}
+                visibleCount={visibleCount}
+                onLoadMore={() => setVisibleCount((current) => Math.min(current + 6, filteredProducts.length))}
+                hasMore={hasMore}
+              />
+            ) : (
+              <div className="flex min-h-[20rem] items-center justify-center border border-dashed border-zinc-300 bg-white/60 text-sm uppercase tracking-[0.22em] text-zinc-400">
+                No products match the current filters.
+              </div>
+            )}
+          </section>
         </div>
       </div>
-
-      {mobileFiltersOpen ? (
-        <div className="fixed inset-0 z-50 bg-black/35 lg:hidden">
-          <div className="absolute left-0 top-0 h-full w-[min(90vw,320px)] overflow-y-auto bg-white p-4">
-            <div className="mb-4 flex items-center justify-between">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-zinc-700">Filters</p>
-              <button
-                type="button"
-                aria-label="Close filters"
-                onClick={() => setMobileFiltersOpen(false)}
-                className="rounded-full p-2 text-zinc-700 hover:bg-zinc-100"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-
-            <FilterSidebar
-              categoryOptions={categoryOptions}
-              sizeOptions={sizeOptions}
-              colorOptions={colorOptions}
-              selectedCategory={selectedCategory}
-              selectedSizes={selectedSizes}
-              selectedColor={selectedColor}
-              priceRange={priceRange}
-              onCategoryChange={setSelectedCategory}
-              onToggleSize={toggleSize}
-              onColorChange={setSelectedColor}
-              onPriceChange={setPriceRange}
-              minPrice={0}
-              maxPrice={2000}
-            />
-          </div>
-          <button type="button" className="h-full w-full" aria-label="Close filters" onClick={() => setMobileFiltersOpen(false)} />
-        </div>
-      ) : null}
-    </div>
+    </main>
   );
 }

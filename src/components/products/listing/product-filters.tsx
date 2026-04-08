@@ -66,7 +66,7 @@ export function ProductFilters({
                 <button
                   key={size}
                   type="button"
-                  onClick={() => onSizeChange(size)}
+                  onClick={() => onSizeChange(active ? '' : size)}
                   className={cn(
                     'h-10 border text-xs font-semibold uppercase tracking-[0.18em] transition-colors',
                     active ? 'border-zinc-900 bg-zinc-900 text-white' : 'border-zinc-200 bg-white text-zinc-600 hover:border-zinc-400 hover:text-zinc-900',
@@ -91,7 +91,7 @@ export function ProductFilters({
                   title={color.label}
                   aria-label={color.label}
                   aria-pressed={active}
-                  onClick={() => onColorChange(color.id)}
+                  onClick={() => onColorChange(active ? '' : color.id)}
                   className={cn(
                     'flex h-8 w-8 items-center justify-center rounded-full border transition-transform duration-200 hover:-translate-y-0.5',
                     active ? 'border-zinc-900 ring-1 ring-zinc-900/20' : 'border-zinc-300',
