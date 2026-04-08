@@ -2,9 +2,10 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { LogIn, UserRound } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { LogOut, UserRound } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
+import { clearSessionAndRedirect, useAuthSession } from '@/features/auth/store';
 
 const navItems = [
   { label: 'Home', href: '/' },
@@ -21,6 +22,9 @@ function isActivePath(pathname: string, href: string) {
 
 export function StorefrontHeader() {
   const pathname = usePathname();
+  const router = useRouter();
+  const session = useAuthSession();
+  const isLoggedIn = Boolean(session.token);
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/70 bg-background/95 backdrop-blur">
@@ -49,13 +53,16 @@ export function StorefrontHeader() {
           </nav>
 
           <div className="flex items-center justify-self-end gap-1 sm:gap-2">
-            <Link
-              href="/login"
-              aria-label="Login"
-              className="inline-flex h-9 w-9 items-center justify-center rounded-full text-foreground/80 transition-colors hover:bg-muted hover:text-foreground"
-            >
-              <LogIn className="h-4 w-4" />
-            </Link>
+            {isLoggedIn ? (
+              <button
+                type="button"
+                onClick={() => clearSessionAndRedirect(router)}
+                aria-label="Log out"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full text-foreground/80 transition-colors hover:bg-muted hover:text-foreground"
+              >
+                <LogOut className="h-4 w-4" />
+              </button>
+            ) : null}
             <Link
               href="/account"
               aria-label="View Profile"
