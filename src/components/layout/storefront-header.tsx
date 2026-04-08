@@ -7,12 +7,20 @@ import { LogOut, UserRound } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { clearSessionAndRedirect, useAuthSession } from '@/features/auth/store';
 
-const navItems = [
+const guestNavItems = [
   { label: 'Home', href: '/' },
-  { label: 'Products', href: '/products' },
+  { label: 'Shop', href: '/products' },
   { label: 'About Us', href: '/about' },
   { label: 'Contact', href: '/contact' },
   { label: 'Policies', href: '/policies' },
+] as const;
+
+const customerNavItems = [
+  { label: 'Home', href: '/' },
+  { label: 'Shop', href: '/products' },
+  { label: 'Cart', href: '/cart' },
+  { label: 'Orders', href: '/orders' },
+  { label: 'Profile', href: '/account' },
 ] as const;
 
 function isActivePath(pathname: string, href: string) {
@@ -25,6 +33,7 @@ export function StorefrontHeader() {
   const router = useRouter();
   const session = useAuthSession();
   const isLoggedIn = Boolean(session.token);
+  const navItems = isLoggedIn ? customerNavItems : guestNavItems;
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/70 bg-background/95 backdrop-blur">

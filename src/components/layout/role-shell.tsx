@@ -8,12 +8,6 @@ import { routePaths } from '@/lib/constants/routes';
 import { clearSessionAndRedirect, useAuthSession } from '@/features/auth/store';
 
 const navigationByRole = {
-  CUSTOMER: [
-    { href: '/account', label: 'Account', icon: Users },
-    { href: '/cart', label: 'Cart', icon: ShoppingBag },
-    { href: '/wishlist', label: 'Wishlist', icon: Warehouse },
-    { href: '/orders', label: 'Orders', icon: Boxes },
-  ],
   STAFF: [
     { href: '/staff/products', label: 'Products', icon: Boxes },
     { href: '/staff/categories', label: 'Categories', icon: Warehouse },
@@ -26,7 +20,7 @@ const navigationByRole = {
   ],
 } as const;
 
-export function RoleShell({ role, children }: { role: 'CUSTOMER' | 'STAFF' | 'ADMIN'; children: React.ReactNode }) {
+export function RoleShell({ role, children }: { role: 'STAFF' | 'ADMIN'; children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const session = useAuthSession();

@@ -1,5 +1,5 @@
-import { RoleShell } from '@/components/layout/role-shell';
+import { SiteShell } from '@/components/layout/site-shell';
 
 export default function CustomerLayout({ children }: { children: React.ReactNode }) {
-  return <RoleShell role="CUSTOMER">{children}</RoleShell>;
+  return <SiteShell>{children}</SiteShell>;
 }
