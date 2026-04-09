@@ -39,7 +39,7 @@ export function AuthPage({ initialTab = 'login' }: AuthPageProps) {
   const [statusMessage, setStatusMessage] = useState('');
   const loginMutation = useLoginMutation();
   const registerMutation = useRegisterMutation();
-  const showDevRoleLogin = process.env.NODE_ENV !== 'production' && process.env.NEXT_PUBLIC_ENABLE_DEV_ROLE_LOGIN !== 'false';
+  const showDevRoleLogin = process.env.NEXT_PUBLIC_ENABLE_DEV_ROLE_LOGIN !== 'false';
 
   function loginAsRole(role: Role) {
     const session = {
@@ -149,7 +149,8 @@ export function AuthPage({ initialTab = 'login' }: AuthPageProps) {
 
           {showDevRoleLogin ? (
             <div className="mt-6 border-t border-zinc-200 pt-5">
-              <p className="text-center text-[0.66rem] font-semibold uppercase tracking-[0.24em] text-zinc-400">Dev Quick Access</p>
+              <p className="text-center text-[0.66rem] font-semibold uppercase tracking-[0.24em] text-zinc-400">Quick Role Login</p>
+              <p className="mt-1 text-center text-[0.62rem] font-medium uppercase tracking-[0.18em] text-zinc-300">Set NEXT_PUBLIC_ENABLE_DEV_ROLE_LOGIN=false to hide</p>
               <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-3">
                 <button
                   type="button"
