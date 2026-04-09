@@ -20,7 +20,7 @@ export default function HomePage() {
       title: category.name,
       collectionLabel: `${String(index + 1).padStart(2, '0')} / COLLECTION`,
       image: categoryFallbackImages[index % categoryFallbackImages.length],
-      href: `/products?category=${encodeURIComponent(category.slug || category.id)}`,
+      href: `/shop?category=${encodeURIComponent(category.slug || category.id)}`,
     })) ?? fallbackCategories;
 
   const newArrivals =

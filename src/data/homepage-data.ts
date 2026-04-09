@@ -21,28 +21,28 @@ export const categories: Category[] = [
     title: 'Tops',
     collectionLabel: '01 / COLLECTION',
     image: '/images/category-tops.svg',
-    href: '/products?category=tops',
+    href: '/shop?category=tops',
   },
   {
     id: 'bottoms',
     title: 'Bottoms',
     collectionLabel: '02 / COLLECTION',
     image: '/images/category-bottoms.svg',
-    href: '/products?category=bottoms',
+    href: '/shop?category=bottoms',
   },
   {
     id: 'accessories',
     title: 'Accessories',
     collectionLabel: '03 / COLLECTION',
     image: '/images/category-accessories.svg',
-    href: '/products?category=accessories',
+    href: '/shop?category=accessories',
   },
   {
     id: 'outerwear',
     title: 'Outerwear',
     collectionLabel: '04 / COLLECTION',
     image: '/images/category-outerwear.svg',
-    href: '/products?category=outerwear',
+    href: '/shop?category=outerwear',
   },
 ];
 
