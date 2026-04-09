@@ -2,13 +2,18 @@ import { NextRequest, NextResponse } from 'next/server';
 
 type Role = 'GUEST' | 'CUSTOMER' | 'STAFF' | 'ADMIN';
 
-const publicPaths = ['/', '/login', '/register', '/products', '/forbidden', '/not-found'];
+const publicPaths = ['/', '/about', '/contact', '/policies', '/products', '/auth', '/login', '/register', '/forbidden', '/not-found'];
+const authPaths = ['/auth', '/login', '/register'];
 const customerPaths = ['/account', '/cart', '/wishlist', '/checkout', '/orders', '/invoices'];
 const staffPaths = ['/staff/products', '/staff/categories', '/staff/orders'];
 const adminPaths = ['/admin'];
 
 function isPublicPath(pathname: string) {
-  return publicPaths.some((path) => pathname === path || pathname.startsWith('/products/'));
+  return publicPaths.some((path) => pathname === path || (path === '/products' && pathname.startsWith('/products/')));
+}
+
+function isStorefrontPath(pathname: string) {
+  return ['/','/about','/contact','/policies','/products'].some((path) => pathname === path || (path === '/products' && pathname.startsWith('/products/')));
 }
 
 function hasAccess(role: Role, pathname: string) {
@@ -31,7 +36,11 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get('fashionshop.token')?.value;
   const role = (request.cookies.get('fashionshop.role')?.value as Role | undefined) ?? 'GUEST';
 
-  if (isPublicPath(pathname) && token && (pathname === '/login' || pathname === '/register')) {
+  if (token && authPaths.includes(pathname)) {
+    return NextResponse.redirect(new URL(roleHome(role), request.url));
+  }
+
+  if (token && (role === 'ADMIN' || role === 'STAFF') && isStorefrontPath(pathname)) {
     return NextResponse.redirect(new URL(roleHome(role), request.url));
   }
 
