@@ -1,6 +1,6 @@
 import type { Role } from './roles';
 
-export const publicRoutes = ['/', '/about', '/contact', '/policies', '/products', '/products/', '/auth', '/login', '/register', '/forbidden', '/not-found'] as const;
+export const publicRoutes = ['/', '/about', '/contact', '/policies', '/shop', '/products', '/products/', '/product', '/auth', '/login', '/register', '/forbidden', '/not-found'] as const;
 
 export const authRoutes = ['/auth', '/login', '/register'] as const;
 
@@ -12,7 +12,7 @@ export const roleRoutes: Record<Exclude<Role, 'GUEST'>, string[]> = {
 
 export const routePaths = {
   home: '/',
-  products: '/products',
+  products: '/shop',
   login: '/login',
   register: '/register',
   forbidden: '/forbidden',

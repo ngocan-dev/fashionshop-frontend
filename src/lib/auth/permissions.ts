@@ -1,7 +1,7 @@
 import { roleRoutes } from '@/lib/constants/routes';
 import type { Role } from '@/lib/constants/roles';
 
-const storefrontPaths = ['/', '/about', '/contact', '/policies', '/products'];
+const storefrontPaths = ['/', '/about', '/contact', '/policies', '/shop', '/products'];
 const authPaths = ['/auth', '/login', '/register'];
 const utilityPaths = ['/forbidden', '/not-found'];
 
@@ -11,14 +11,14 @@ export function isAuthenticated(role: Role | null | undefined) {
 
 export function canAccessPath(role: Role | null | undefined, path: string) {
   if (!role || role === 'GUEST') {
-    return [...storefrontPaths, ...authPaths, ...utilityPaths].some((allowed) => path === allowed || (allowed === '/products' && path.startsWith('/products/')));
+    return [...storefrontPaths, ...authPaths, ...utilityPaths].some((allowed) => path === allowed || (allowed === '/products' && path.startsWith('/products/')) || (allowed === '/shop' && path.startsWith('/shop/')));
   }
 
   if (authPaths.includes(path)) {
     return false;
   }
 
-  const isStorefront = storefrontPaths.some((allowed) => path === allowed || (allowed === '/products' && path.startsWith('/products/')));
+  const isStorefront = storefrontPaths.some((allowed) => path === allowed || (allowed === '/products' && path.startsWith('/products/')) || (allowed === '/shop' && path.startsWith('/shop/')));
 
   if (role === 'ADMIN') {
     if (isStorefront) return false;
@@ -31,7 +31,7 @@ export function canAccessPath(role: Role | null | undefined, path: string) {
   }
 
   if (role === 'CUSTOMER') {
-    return [...storefrontPaths, ...roleRoutes.CUSTOMER, ...utilityPaths].some((allowed) => path === allowed || (allowed === '/products' && path.startsWith('/products/')));
+    return [...storefrontPaths, ...roleRoutes.CUSTOMER, ...utilityPaths].some((allowed) => path === allowed || (allowed === '/products' && path.startsWith('/products/')) || (allowed === '/shop' && path.startsWith('/shop/')));
   }
 
   return false;

@@ -2,18 +2,18 @@ import { NextRequest, NextResponse } from 'next/server';
 
 type Role = 'GUEST' | 'CUSTOMER' | 'STAFF' | 'ADMIN';
 
-const publicPaths = ['/', '/about', '/contact', '/policies', '/products', '/auth', '/login', '/register', '/forbidden', '/not-found'];
+const publicPaths = ['/', '/about', '/contact', '/policies', '/shop', '/products', '/product', '/auth', '/login', '/register', '/forbidden', '/not-found'];
 const authPaths = ['/auth', '/login', '/register'];
 const customerPaths = ['/account', '/cart', '/wishlist', '/checkout', '/orders', '/invoices'];
 const staffPaths = ['/staff/products', '/staff/categories', '/staff/orders'];
 const adminPaths = ['/dashboard', '/staff-accounts', '/customers'];
 
 function isPublicPath(pathname: string) {
-  return publicPaths.some((path) => pathname === path || (path === '/products' && pathname.startsWith('/products/')));
+  return publicPaths.some((path) => pathname === path || (path === '/products' && pathname.startsWith('/products/')) || (path === '/shop' && pathname.startsWith('/shop/')));
 }
 
 function isStorefrontPath(pathname: string) {
-  return ['/','/about','/contact','/policies','/products'].some((path) => pathname === path || (path === '/products' && pathname.startsWith('/products/')));
+  return ['/', '/about', '/contact', '/policies', '/shop', '/products'].some((path) => pathname === path || (path === '/products' && pathname.startsWith('/products/')) || (path === '/shop' && pathname.startsWith('/shop/')));
 }
 
 function hasAccess(role: Role, pathname: string) {
