@@ -1,33 +1,11 @@
 'use client';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { createStaffAccount, deleteAdminAccount, deleteAdminAccountByEmail, deleteAdminUser, fetchAdminCustomerAccounts, fetchAdminStaffAccounts, fetchCustomerAccounts, fetchMe, fetchMeUser, fetchMyOrders, fetchStaffAccounts, fetchUserProfile, updateMe, updateUserProfile } from './services';
+import { createStaffAccount, deleteAdminAccount, deleteAdminAccountByEmail, deleteAdminUser, fetchAdminCustomerAccounts, fetchAdminStaffAccounts, fetchMe, updateMe } from './services';
 import { queryKeys } from '@/lib/api/query-keys';
-
-export function useUserProfileQuery() {
-  return useQuery({ queryKey: [...queryKeys.me, 'profile'], queryFn: fetchUserProfile });
-}
-
-export function useMeUserQuery() {
-  return useQuery({ queryKey: [...queryKeys.me, 'user'], queryFn: fetchMeUser });
-}
 
 export function useMeQuery() {
   return useQuery({ queryKey: queryKeys.me, queryFn: fetchMe });
-}
-
-export function useMyOrdersQuery() {
-  return useQuery({ queryKey: [...queryKeys.orders, 'my-account'], queryFn: fetchMyOrders });
-}
-
-export function useUpdateProfileMutation() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: updateUserProfile,
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: queryKeys.me });
-    },
-  });
 }
 
 export function useUpdateMeMutation() {
@@ -38,14 +16,6 @@ export function useUpdateMeMutation() {
       await queryClient.invalidateQueries({ queryKey: queryKeys.me });
     },
   });
-}
-
-export function useStaffAccountsQuery() {
-  return useQuery({ queryKey: queryKeys.staffAccounts, queryFn: fetchStaffAccounts });
-}
-
-export function useCustomerAccountsQuery() {
-  return useQuery({ queryKey: queryKeys.customerAccounts, queryFn: fetchCustomerAccounts });
 }
 
 export function useAdminStaffAccountsQuery() {

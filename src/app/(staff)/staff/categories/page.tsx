@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { FormField } from '@/components/common/form-field';
 import { useCategoriesQuery, useCreateCategoryMutation } from '@/features/categories/hooks';
 import { toast } from 'sonner';
+import type { ParsedApiError } from '@/lib/api/errors';
 
 const categorySchema = z.object({ name: z.string().min(2), slug: z.string().min(2), description: z.string().optional() });
 type CategoryFormValues = z.infer<typeof categorySchema>;
@@ -21,17 +22,29 @@ export default function CategoriesPage() {
   const form = useForm<CategoryFormValues>({ resolver: zodResolver(categorySchema), defaultValues: { name: '', slug: '', description: '' } });
 
   if (categoriesQuery.isLoading) return <LoadingState label="Loading categories" />;
+  if (categoriesQuery.isError) return <EmptyState title="Categories unavailable" description="Unable to load categories." actionLabel="Retry" actionHref="/staff/categories" />;
 
   return (
     <div className="space-y-6">
       <Card>
         <CardHeader><h1 className="text-2xl font-semibold">Category management</h1></CardHeader>
         <CardContent>
-          <form className="grid gap-4 md:grid-cols-3" onSubmit={form.handleSubmit((values) => mutation.mutate(values, { onSuccess: () => toast.success('Category created') }))}>
+          <form
+            className="grid gap-4 md:grid-cols-3"
+            onSubmit={form.handleSubmit((values) =>
+              mutation.mutate(values, {
+                onSuccess: () => toast.success('Category created'),
+                onError: (error) => {
+                  const apiError = error as ParsedApiError;
+                  toast.error(apiError.message || 'Unable to create category');
+                },
+              }),
+            )}
+          >
             <FormField<CategoryFormValues> label="Name" name="name" register={form.register} error={form.formState.errors.name} />
             <FormField<CategoryFormValues> label="Slug" name="slug" register={form.register} error={form.formState.errors.slug} />
             <FormField<CategoryFormValues> label="Description" name="description" register={form.register} error={form.formState.errors.description} />
-            <div className="md:col-span-3"><Button type="submit">Create category</Button></div>
+            <div className="md:col-span-3"><Button type="submit" disabled={mutation.isPending}>{mutation.isPending ? 'Creating...' : 'Create category'}</Button></div>
           </form>
         </CardContent>
       </Card>

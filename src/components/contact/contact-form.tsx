@@ -1,15 +1,24 @@
+'use client';
+
+import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 
 const subjects = ['Order Inquiry', 'Product Availability', 'Private Appointment', 'Press & Editorial', 'Other'];
 
 export function ContactForm() {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    // Backend endpoint for public contact submission is not available yet.
+    toast.info('Contact submission is temporarily unavailable. Please use direct email/phone details below.');
+  }
+
   return (
     <section className="flex justify-center">
       <div className="mx-auto w-[90%] border border-zinc-300 bg-zinc-50 p-6 md:w-[70%] md:p-8 lg:w-[50%]">
         <h2 className="text-4xl font-bold tracking-tight text-zinc-900 md:text-5xl">Get in Touch</h2>
 
-        <form className="mt-8 space-y-5" action="#" method="post">
+        <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
           <label className="block space-y-2">
             <span className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-400">Name</span>
             <Input name="name" placeholder="Enter your full name" aria-label="Name" className="rounded-none border-zinc-200 bg-transparent focus:border-zinc-700 focus:ring-zinc-200" />

@@ -1,8 +1,9 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LogOut, Menu, ShoppingBag, Users, LayoutDashboard, Warehouse, Boxes } from 'lucide-react';
+import { LogOut, Menu, ShoppingBag, Users, LayoutDashboard, Warehouse, Boxes, X } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { routePaths } from '@/lib/constants/routes';
 import { useAuthSession } from '@/features/auth/store';
@@ -25,6 +26,7 @@ export function RoleShell({ role, children }: { role: 'STAFF' | 'ADMIN'; childre
   const pathname = usePathname();
   const session = useAuthSession();
   const logoutMutation = useLogoutMutation();
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-background">
@@ -72,11 +74,61 @@ export function RoleShell({ role, children }: { role: 'STAFF' | 'ADMIN'; childre
               <Link href={routePaths.home} className="font-semibold tracking-tight">
                 FashionShop
               </Link>
-              <button type="button" className="rounded-full border border-border p-2" aria-label="Open navigation">
+              <button type="button" className="rounded-full border border-border p-2" aria-label="Open navigation" onClick={() => setMobileNavOpen(true)}>
                 <Menu className="h-4 w-4" />
               </button>
             </div>
           </header>
+
+          {mobileNavOpen ? (
+            <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true">
+              <button type="button" className="absolute inset-0 bg-black/40" aria-label="Close navigation" onClick={() => setMobileNavOpen(false)} />
+              <aside className="absolute right-0 top-0 h-full w-72 border-l border-border bg-background p-4 shadow-xl">
+                <div className="mb-6 flex items-center justify-between">
+                  <p className="font-semibold tracking-tight">{role} Panel</p>
+                  <button type="button" className="rounded-full border border-border p-2" aria-label="Close navigation" onClick={() => setMobileNavOpen(false)}>
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+                <div className="mb-5 rounded-2xl border border-border bg-brand-50 px-4 py-3 text-sm">
+                  <p className="font-medium text-foreground">{session.user?.fullName ?? 'Guest'}</p>
+                  <p className="text-muted-foreground">{role}</p>
+                </div>
+                <nav className="space-y-1">
+                  {navigationByRole[role].map((item) => {
+                    const Icon = item.icon;
+                    const active = pathname.startsWith(item.href);
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => setMobileNavOpen(false)}
+                        className={cn(
+                          'flex items-center gap-3 rounded-2xl px-4 py-3 text-sm transition-colors',
+                          active ? 'bg-brand-600 text-white shadow-lg shadow-brand-600/20' : 'text-foreground hover:bg-muted',
+                        )}
+                      >
+                        <Icon className="h-4 w-4" />
+                        {item.label}
+                      </Link>
+                    );
+                  })}
+                </nav>
+                <button
+                  type="button"
+                  className="mt-6 flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm text-foreground hover:bg-muted"
+                  onClick={() => {
+                    setMobileNavOpen(false);
+                    logoutMutation.mutate();
+                  }}
+                >
+                  <LogOut className="h-4 w-4" />
+                  Log out
+                </button>
+              </aside>
+            </div>
+          ) : null}
+
           <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">{children}</main>
         </div>
       </div>

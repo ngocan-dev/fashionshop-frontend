@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { ProductForm } from '@/features/products/components/product-form';
 import { useCreateProductMutation } from '@/features/products/hooks';
 import { toast } from 'sonner';
+import type { ParsedApiError } from '@/lib/api/errors';
 
 export default function CreateProductPage() {
   const router = useRouter();
@@ -14,7 +15,21 @@ export default function CreateProductPage() {
     <Card>
       <CardHeader><h1 className="text-2xl font-semibold">Create product</h1></CardHeader>
       <CardContent>
-        <ProductForm onSubmit={(values) => mutation.mutate(values, { onSuccess: () => { toast.success('Product created'); router.push('/staff/products'); } })} />
+        <ProductForm
+          submitLabel={mutation.isPending ? 'Creating product...' : 'Create product'}
+          onSubmit={(values) =>
+            mutation.mutate(values, {
+              onSuccess: () => {
+                toast.success('Product created');
+                router.push('/staff/products');
+              },
+              onError: (error) => {
+                const apiError = error as ParsedApiError;
+                toast.error(apiError.message || 'Unable to create product');
+              },
+            })
+          }
+        />
       </CardContent>
     </Card>
   );

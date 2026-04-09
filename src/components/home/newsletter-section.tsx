@@ -1,4 +1,14 @@
+'use client';
+
+import { toast } from 'sonner';
+
 export function NewsletterSection() {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    // Backend endpoint for newsletter subscription is not available yet.
+    toast.info('Newsletter signup is temporarily unavailable. Please check back soon.');
+  }
+
   return (
     <section className="bg-zinc-100 py-20 md:py-28">
       <div className="mx-auto w-full max-w-3xl px-6 text-center md:px-8">
@@ -7,7 +17,7 @@ export function NewsletterSection() {
           Receive exclusive access to private launches and editorial insights.
         </p>
 
-        <form className="mx-auto mt-9 flex max-w-2xl flex-col gap-3 sm:flex-row" action="#" method="post">
+        <form className="mx-auto mt-9 flex max-w-2xl flex-col gap-3 sm:flex-row" onSubmit={handleSubmit}>
           <label htmlFor="email" className="sr-only">
             Email
           </label>

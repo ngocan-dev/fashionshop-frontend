@@ -14,3 +14,16 @@ export function isOrderPayable(order: Order, payment?: Payment | null) {
   if (payment?.status === 'PAID') return false;
   return true;
 }
+
+const staffNextStatuses: Record<OrderStatus, OrderStatus[]> = {
+  PENDING: ['CONFIRMED', 'CANCELLED'],
+  CONFIRMED: ['PROCESSING', 'CANCELLED'],
+  PROCESSING: ['SHIPPED', 'CANCELLED'],
+  SHIPPED: ['DELIVERED'],
+  DELIVERED: [],
+  CANCELLED: [],
+};
+
+export function getStaffManageableStatuses(status: OrderStatus) {
+  return staffNextStatuses[status];
+}

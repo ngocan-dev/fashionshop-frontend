@@ -20,6 +20,7 @@ export default function AdminDashboardPage() {
   const query = useDashboardQuery(from, to);
 
   if (query.isLoading) return <LoadingState label="Loading dashboard" />;
+  if (query.isError) return <EmptyState title="Dashboard unavailable" description="Unable to load dashboard metrics." />;
   if (!query.data) return <EmptyState title="Dashboard unavailable" />;
 
   return (

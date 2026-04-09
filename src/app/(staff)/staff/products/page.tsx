@@ -5,12 +5,15 @@ import { EmptyState } from '@/components/common/empty-state';
 import { LoadingState } from '@/components/common/loading-state';
 import { DataTable } from '@/components/common/data-table';
 import { useDeleteManageProductMutation, useManageProductsQuery } from '@/features/products/hooks';
+import { toast } from 'sonner';
+import type { ParsedApiError } from '@/lib/api/errors';
 
 export default function StaffProductsPage() {
   const productsQuery = useManageProductsQuery();
   const deleteMutation = useDeleteManageProductMutation();
 
   if (productsQuery.isLoading) return <LoadingState label="Loading products" />;
+  if (productsQuery.isError) return <EmptyState title="Products unavailable" description="Unable to load managed products." actionLabel="Retry" actionHref="/staff/products" />;
   if (!productsQuery.data || productsQuery.data.length === 0) return <EmptyState title="No managed products" actionLabel="Create product" actionHref="/staff/products/new" />;
 
   return (
@@ -23,7 +26,26 @@ export default function StaffProductsPage() {
           { header: 'Stock', cell: (product) => product.stock },
           { header: 'Price', cell: (product) => `$${product.price.toFixed(2)}` },
           { header: 'Edit', cell: (product) => <Link className="text-brand-700" href={`/staff/products/${product.id}/edit`}>Edit</Link> },
-          { header: 'Delete', cell: (product) => <button className="text-danger" onClick={() => deleteMutation.mutate(product.id)}>Delete</button> },
+          {
+            header: 'Delete',
+            cell: (product) => (
+              <button
+                className="text-danger disabled:opacity-50"
+                disabled={deleteMutation.isPending}
+                onClick={() =>
+                  deleteMutation.mutate(product.id, {
+                    onSuccess: () => toast.success('Product removed'),
+                    onError: (error) => {
+                      const apiError = error as ParsedApiError;
+                      toast.error(apiError.message || 'Unable to delete product');
+                    },
+                  })
+                }
+              >
+                Delete
+              </button>
+            ),
+          },
         ]}
       />
     </div>
