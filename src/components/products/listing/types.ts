@@ -1,4 +1,4 @@
-export type ProductCategory = 'Outerwear' | 'Tailoring' | 'Knitwear' | 'Accessories' | 'Bottoms';
+export type ProductCategory = string;
 
 export type ProductListingItem = {
   id: string;

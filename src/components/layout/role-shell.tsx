@@ -1,11 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { LogOut, Menu, ShoppingBag, Users, LayoutDashboard, Warehouse, Boxes } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { routePaths } from '@/lib/constants/routes';
-import { clearSessionAndRedirect, useAuthSession } from '@/features/auth/store';
+import { useAuthSession } from '@/features/auth/store';
+import { useLogoutMutation } from '@/features/auth/hooks';
 
 const navigationByRole = {
   STAFF: [
@@ -22,8 +23,8 @@ const navigationByRole = {
 
 export function RoleShell({ role, children }: { role: 'STAFF' | 'ADMIN'; children: React.ReactNode }) {
   const pathname = usePathname();
-  const router = useRouter();
   const session = useAuthSession();
+  const logoutMutation = useLogoutMutation();
 
   return (
     <div className="min-h-screen bg-background">
@@ -58,7 +59,7 @@ export function RoleShell({ role, children }: { role: 'STAFF' | 'ADMIN'; childre
           <button
             type="button"
             className="mt-auto flex items-center gap-3 rounded-2xl px-4 py-3 text-sm text-foreground hover:bg-muted"
-            onClick={() => clearSessionAndRedirect(router)}
+            onClick={() => logoutMutation.mutate()}
           >
             <LogOut className="h-4 w-4" />
             Log out

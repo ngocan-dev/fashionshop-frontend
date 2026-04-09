@@ -2,9 +2,10 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils/cn';
-import { clearSessionAndRedirect, useAuthSession } from '@/features/auth/store';
+import { useAuthSession } from '@/features/auth/store';
+import { useLogoutMutation } from '@/features/auth/hooks';
 import { AccountMenu } from './account-menu';
 
 const navItems = [
@@ -22,8 +23,8 @@ function isActivePath(pathname: string, href: string) {
 
 export function StorefrontHeader() {
   const pathname = usePathname();
-  const router = useRouter();
   const session = useAuthSession();
+  const logoutMutation = useLogoutMutation();
   const isLoggedIn = Boolean(session.token);
 
   return (
@@ -53,7 +54,7 @@ export function StorefrontHeader() {
           </nav>
 
           <div className="flex items-center justify-self-end gap-1 sm:gap-2">
-            <AccountMenu isLoggedIn={isLoggedIn} onLogout={() => clearSessionAndRedirect(router)} />
+            <AccountMenu isLoggedIn={isLoggedIn} onLogout={() => logoutMutation.mutate()} />
           </div>
         </div>
 

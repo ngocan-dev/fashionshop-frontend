@@ -5,9 +5,12 @@ import { useRouter } from 'next/navigation';
 import { AuthTabs, type AuthTab } from './auth-tabs';
 import { LoginForm, type LoginErrors, type LoginValues } from './login-form';
 import { RegisterForm, type RegisterErrors, type RegisterValues } from './register-form';
+import { useLoginMutation, useRegisterMutation } from '@/features/auth/hooks';
+import { loginSchema, registerSchema } from '@/features/auth/schemas';
 import { useAuthStore } from '@/features/auth/store';
 import { redirectForRole } from '@/lib/auth/permissions';
 import type { Role } from '@/lib/constants/roles';
+import type { ParsedApiError } from '@/lib/api/errors';
 
 type AuthPageProps = {
   initialTab?: AuthTab;
@@ -25,10 +28,6 @@ const initialRegisterValues: RegisterValues = {
   confirmPassword: '',
 };
 
-function validateEmail(value: string) {
-  return /^\S+@\S+\.\S+$/.test(value);
-}
-
 export function AuthPage({ initialTab = 'login' }: AuthPageProps) {
   const router = useRouter();
   const setSession = useAuthStore((state) => state.setSession);
@@ -38,6 +37,8 @@ export function AuthPage({ initialTab = 'login' }: AuthPageProps) {
   const [loginErrors, setLoginErrors] = useState<LoginErrors>({});
   const [registerErrors, setRegisterErrors] = useState<RegisterErrors>({});
   const [statusMessage, setStatusMessage] = useState('');
+  const loginMutation = useLoginMutation();
+  const registerMutation = useRegisterMutation();
   const showDevRoleLogin = process.env.NODE_ENV !== 'production' && process.env.NEXT_PUBLIC_ENABLE_DEV_ROLE_LOGIN !== 'false';
 
   function loginAsRole(role: Role) {
@@ -56,27 +57,16 @@ export function AuthPage({ initialTab = 'login' }: AuthPageProps) {
     router.replace(redirectForRole(role));
   }
 
-  function handleLogin() {
-    setStatusMessage('Login request ready.');
-  }
-
-  function handleRegister() {
-    setStatusMessage('Register request ready.');
-  }
-
   function submitLogin(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const nextErrors: LoginErrors = {};
-    if (!loginValues.email.trim()) {
-      nextErrors.email = 'Email address is required.';
-    } else if (!validateEmail(loginValues.email)) {
-      nextErrors.email = 'Enter a valid email address.';
-    }
-
-    if (!loginValues.password.trim()) {
-      nextErrors.password = 'Password is required.';
-    }
+    const parseResult = loginSchema.safeParse(loginValues);
+    const nextErrors: LoginErrors = parseResult.success
+      ? {}
+      : {
+          email: parseResult.error.flatten().fieldErrors.email?.[0],
+          password: parseResult.error.flatten().fieldErrors.password?.[0],
+        };
 
     setLoginErrors(nextErrors);
     setStatusMessage('');
@@ -85,32 +75,26 @@ export function AuthPage({ initialTab = 'login' }: AuthPageProps) {
       return;
     }
 
-    handleLogin();
+    loginMutation.mutate(parseResult.data, {
+      onError: (error) => {
+        const apiError = error as ParsedApiError;
+        setStatusMessage(apiError.message || 'Unable to log in. Please try again.');
+      },
+    });
   }
 
   function submitRegister(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const nextErrors: RegisterErrors = {};
-    if (!registerValues.fullName.trim()) {
-      nextErrors.fullName = 'Full name is required.';
-    }
-
-    if (!registerValues.email.trim()) {
-      nextErrors.email = 'Email address is required.';
-    } else if (!validateEmail(registerValues.email)) {
-      nextErrors.email = 'Enter a valid email address.';
-    }
-
-    if (!registerValues.password.trim()) {
-      nextErrors.password = 'Password is required.';
-    }
-
-    if (!registerValues.confirmPassword.trim()) {
-      nextErrors.confirmPassword = 'Please confirm your password.';
-    } else if (registerValues.confirmPassword !== registerValues.password) {
-      nextErrors.confirmPassword = 'Passwords do not match.';
-    }
+    const parseResult = registerSchema.safeParse(registerValues);
+    const nextErrors: RegisterErrors = parseResult.success
+      ? {}
+      : {
+          fullName: parseResult.error.flatten().fieldErrors.fullName?.[0],
+          email: parseResult.error.flatten().fieldErrors.email?.[0],
+          password: parseResult.error.flatten().fieldErrors.password?.[0],
+          confirmPassword: parseResult.error.flatten().fieldErrors.confirmPassword?.[0],
+        };
 
     setRegisterErrors(nextErrors);
     setStatusMessage('');
@@ -119,7 +103,12 @@ export function AuthPage({ initialTab = 'login' }: AuthPageProps) {
       return;
     }
 
-    handleRegister();
+    registerMutation.mutate(parseResult.data, {
+      onError: (error) => {
+        const apiError = error as ParsedApiError;
+        setStatusMessage(apiError.message || 'Unable to register. Please try again.');
+      },
+    });
   }
 
   return (
@@ -149,6 +138,7 @@ export function AuthPage({ initialTab = 'login' }: AuthPageProps) {
                 errors={loginErrors}
                 onChange={(field, value) => setLoginValues((current) => ({ ...current, [field]: value }))}
                 onSubmit={submitLogin}
+                isSubmitting={loginMutation.isPending}
               />
             ) : (
               <RegisterForm
@@ -156,6 +146,7 @@ export function AuthPage({ initialTab = 'login' }: AuthPageProps) {
                 errors={registerErrors}
                 onChange={(field, value) => setRegisterValues((current) => ({ ...current, [field]: value }))}
                 onSubmit={submitRegister}
+                isSubmitting={registerMutation.isPending}
               />
             )}
           </div>
@@ -189,7 +180,7 @@ export function AuthPage({ initialTab = 'login' }: AuthPageProps) {
             </div>
           ) : null}
 
-          {statusMessage ? <p className="mt-5 text-center text-xs font-medium uppercase tracking-[0.22em] text-zinc-500">{statusMessage}</p> : null}
+          {statusMessage ? <p className="mt-5 text-center text-xs font-medium uppercase tracking-[0.14em] text-red-600">{statusMessage}</p> : null}
         </div>
       </section>
 

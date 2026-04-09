@@ -1,36 +1,28 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { ProductFilters } from '@/components/products/listing/product-filters';
 import { ProductGrid } from '@/components/products/listing/product-grid';
 import { ProductToolbar } from '@/components/products/listing/product-toolbar';
 import type { ProductListingItem, ProductSortOption } from '@/components/products/listing/types';
+import { EmptyState } from '@/components/common/empty-state';
+import { LoadingState } from '@/components/common/loading-state';
+import { useStoreProductsQuery } from '@/features/products/hooks';
 
-const productCatalog: ProductListingItem[] = [
-  { id: 'modular-tech-parka', name: 'Modular Tech Parka', category: 'Outerwear', price: 840, imageSrc: '/images/product-blazer.svg', imageAlt: 'Modular Tech Parka in technical orange and charcoal', color: 'black', size: 'M' },
-  { id: 'boxy-sculptural-blazer', name: 'Boxy Sculptural Blazer', category: 'Tailoring', price: 1250, imageSrc: '/images/product-blazer.svg', imageAlt: 'Boxy Sculptural Blazer in structured gray tailoring', color: 'gray', size: 'S' },
-  { id: 'archival-cargo-trousers', name: 'Archival Cargo Trousers', category: 'Bottoms', price: 560, imageSrc: '/images/product-trousers.svg', imageAlt: 'Archival Cargo Trousers in washed green denim', color: 'dark-brown', size: 'L' },
-  { id: 'oversized-ribbed-knit', name: 'Oversized Ribbed Knit', category: 'Knitwear', price: 720, imageSrc: '/images/product-shirt.svg', imageAlt: 'Oversized Ribbed Knit in deep teal', color: 'off-white', size: 'XL' },
-  { id: 'tactical-layering-vest', name: 'Tactical Layering Vest', category: 'Outerwear', price: 440, imageSrc: '/images/product-blazer.svg', imageAlt: 'Tactical Layering Vest in high-visibility orange', color: 'black', size: 'M' },
-  { id: 'fluid-silk-shirt', name: 'Fluid Silk Shirt', category: 'Tailoring', price: 380, imageSrc: '/images/product-shirt.svg', imageAlt: 'Fluid Silk Shirt in muted rose satin', color: 'light-gray', size: 'S' },
-  { id: 'architectural-shell-coat', name: 'Architectural Shell Coat', category: 'Outerwear', price: 1180, imageSrc: '/images/product-blazer.svg', imageAlt: 'Architectural Shell Coat with sharp silhouette', color: 'gray', size: 'L' },
-  { id: 'narrow-pleat-trousers', name: 'Narrow Pleat Trousers', category: 'Bottoms', price: 610, imageSrc: '/images/product-trousers.svg', imageAlt: 'Narrow Pleat Trousers in dark green', color: 'dark-brown', size: 'M' },
-  { id: 'merino-column-knit', name: 'Merino Column Knit', category: 'Knitwear', price: 690, imageSrc: '/images/product-shirt.svg', imageAlt: 'Merino Column Knit in teal ribbing', color: 'off-white', size: 'XS' },
-  { id: 'technical-trench-layer', name: 'Technical Trench Layer', category: 'Outerwear', price: 920, imageSrc: '/images/product-blazer.svg', imageAlt: 'Technical Trench Layer with storm-ready panels', color: 'black', size: 'XL' },
-  { id: 'sculpted-tailoring-jacket', name: 'Sculpted Tailoring Jacket', category: 'Tailoring', price: 980, imageSrc: '/images/product-blazer.svg', imageAlt: 'Sculpted Tailoring Jacket in charcoal melange', color: 'gray', size: 'M' },
-  { id: 'utility-canvas-trousers', name: 'Utility Canvas Trousers', category: 'Bottoms', price: 510, imageSrc: '/images/product-trousers.svg', imageAlt: 'Utility Canvas Trousers in faded olive', color: 'dark-brown', size: 'L' },
-  { id: 'ribbed-layer-tee', name: 'Ribbed Layer Tee', category: 'Knitwear', price: 260, imageSrc: '/images/product-shirt.svg', imageAlt: 'Ribbed Layer Tee in washed slate', color: 'light-gray', size: 'S' },
-  { id: 'canvas-overcoat', name: 'Canvas Overcoat', category: 'Outerwear', price: 1040, imageSrc: '/images/product-blazer.svg', imageAlt: 'Canvas Overcoat with an oversized cut', color: 'black', size: 'L' },
-  { id: 'pressed-wool-blazer', name: 'Pressed Wool Blazer', category: 'Tailoring', price: 1320, imageSrc: '/images/product-blazer.svg', imageAlt: 'Pressed Wool Blazer in precise gray tailoring', color: 'gray', size: 'M' },
-  { id: 'archival-straight-jeans', name: 'Archival Straight Jeans', category: 'Bottoms', price: 540, imageSrc: '/images/product-trousers.svg', imageAlt: 'Archival Straight Jeans in deep washed green', color: 'dark-brown', size: 'S' },
-  { id: 'textured-wool-pullover', name: 'Textured Wool Pullover', category: 'Knitwear', price: 760, imageSrc: '/images/product-shirt.svg', imageAlt: 'Textured Wool Pullover in forest teal', color: 'off-white', size: 'M' },
-  { id: 'reflective-panel-parka', name: 'Reflective Panel Parka', category: 'Outerwear', price: 890, imageSrc: '/images/product-blazer.svg', imageAlt: 'Reflective Panel Parka with safety striping', color: 'black', size: 'XL' },
-  { id: 'soft-shoulder-jacket', name: 'Soft Shoulder Jacket', category: 'Tailoring', price: 1150, imageSrc: '/images/product-blazer.svg', imageAlt: 'Soft Shoulder Jacket with a relaxed drape', color: 'light-gray', size: 'S' },
-  { id: 'relaxed-cargo-trousers', name: 'Relaxed Cargo Trousers', category: 'Bottoms', price: 590, imageSrc: '/images/product-trousers.svg', imageAlt: 'Relaxed Cargo Trousers in dark moss denim', color: 'dark-brown', size: 'M' },
-  { id: 'longline-rib-knit', name: 'Longline Rib Knit', category: 'Knitwear', price: 680, imageSrc: '/images/product-shirt.svg', imageAlt: 'Longline Rib Knit in warm charcoal green', color: 'gray', size: 'L' },
-  { id: 'panelled-field-coat', name: 'Panelled Field Coat', category: 'Outerwear', price: 960, imageSrc: '/images/product-blazer.svg', imageAlt: 'Panelled Field Coat in a technical finish', color: 'black', size: 'M' },
-  { id: 'silk-drape-shirt', name: 'Silk Drape Shirt', category: 'Tailoring', price: 420, imageSrc: '/images/product-shirt.svg', imageAlt: 'Silk Drape Shirt in muted satin brown', color: 'off-white', size: 'XS' },
-];
+const sortQueryMap: Record<string, ProductSortOption> = {
+  newest: 'Newest Arrivals',
+  'price-asc': 'Price: Low to High',
+  'price-desc': 'Price: High to Low',
+  category: 'Category',
+};
+
+const sortValueMap: Record<ProductSortOption, string> = {
+  'Newest Arrivals': 'newest',
+  'Price: Low to High': 'price-asc',
+  'Price: High to Low': 'price-desc',
+  Category: 'category',
+};
 
 function sortProducts(products: ProductListingItem[], sortBy: ProductSortOption) {
   const list = [...products];
@@ -51,18 +43,65 @@ function sortProducts(products: ProductListingItem[], sortBy: ProductSortOption)
 }
 
 export default function ProductsPage() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<'All Products' | ProductListingItem['category']>('All Products');
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const [searchTerm, setSearchTerm] = useState(searchParams.get('search') ?? '');
+  const [selectedCategory, setSelectedCategory] = useState<'All Products' | ProductListingItem['category']>(searchParams.get('category') ?? 'All Products');
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
   const [priceRange, setPriceRange] = useState(2000);
-  const [sortBy, setSortBy] = useState<ProductSortOption>('Newest Arrivals');
+  const [sortBy, setSortBy] = useState<ProductSortOption>(sortQueryMap[searchParams.get('sort') ?? ''] ?? 'Newest Arrivals');
   const [visibleCount, setVisibleCount] = useState(6);
+
+  const productsQuery = useStoreProductsQuery({
+    keyword: searchTerm.trim() || undefined,
+    categoryId: selectedCategory !== 'All Products' ? selectedCategory : undefined,
+    sortBy: sortValueMap[sortBy],
+  });
+
+  const apiProducts = useMemo<ProductListingItem[]>(
+    () =>
+      (productsQuery.data ?? []).map((product) => ({
+        id: product.id,
+        name: product.name,
+        category: product.categoryName ?? 'Accessories',
+        price: product.price,
+        imageSrc: product.images[0]?.url || '/images/product-blazer.svg',
+        imageAlt: product.images[0]?.alt || product.name,
+        color: product.color || product.colors?.[0] || 'black',
+        size: product.size || product.sizes?.[0] || 'M',
+      })),
+    [productsQuery.data],
+  );
+
+  const categoryOptions = useMemo<Array<'All Products' | string>>(() => {
+    const fromData = Array.from(new Set(apiProducts.map((product) => product.category).filter(Boolean)));
+    return ['All Products', ...fromData];
+  }, [apiProducts]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (searchTerm.trim()) params.set('search', searchTerm.trim());
+    else params.delete('search');
+
+    if (selectedCategory !== 'All Products') params.set('category', selectedCategory);
+    else params.delete('category');
+
+    if (sortBy !== 'Newest Arrivals') params.set('sort', sortValueMap[sortBy]);
+    else params.delete('sort');
+
+    const next = params.toString();
+    if (next === searchParams.toString()) return;
+    router.replace(next ? `${pathname}?${next}` : pathname, { scroll: false });
+  }, [pathname, router, searchParams, searchTerm, selectedCategory, sortBy]);
 
   const filteredProducts = useMemo(() => {
     const keyword = searchTerm.trim().toLowerCase();
 
-    const filtered = productCatalog.filter((product) => {
+    const filtered = apiProducts.filter((product) => {
       const matchesSearch = !keyword || [product.name, product.category, product.color, product.size].some((value) => value.toLowerCase().includes(keyword));
       const matchesCategory = selectedCategory === 'All Products' || product.category === selectedCategory;
       const matchesSize = !selectedSize || product.size === selectedSize;
@@ -73,10 +112,30 @@ export default function ProductsPage() {
     });
 
     return sortProducts(filtered, sortBy);
-  }, [priceRange, searchTerm, selectedCategory, selectedColor, selectedSize, sortBy]);
+  }, [apiProducts, priceRange, searchTerm, selectedCategory, selectedColor, selectedSize, sortBy]);
 
   const visibleProducts = useMemo(() => filteredProducts.slice(0, visibleCount), [filteredProducts, visibleCount]);
   const hasMore = visibleCount < filteredProducts.length;
+
+  if (productsQuery.isLoading) {
+    return (
+      <main className="min-h-screen bg-[#f6f6f3] text-zinc-900">
+        <div className="mx-auto max-w-[1520px] px-4 py-6 sm:px-6 lg:px-10 lg:py-10">
+          <LoadingState label="Loading products" />
+        </div>
+      </main>
+    );
+  }
+
+  if (productsQuery.isError) {
+    return (
+      <main className="min-h-screen bg-[#f6f6f3] text-zinc-900">
+        <div className="mx-auto max-w-[1520px] px-4 py-6 sm:px-6 lg:px-10 lg:py-10">
+          <EmptyState title="Products unavailable" description="Please try again in a moment." actionLabel="Refresh" actionHref="/products" />
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-[#f6f6f3] text-zinc-900">
@@ -85,6 +144,7 @@ export default function ProductsPage() {
           <div className="lg:sticky lg:top-8 lg:self-start">
             <ProductFilters
               selectedCategory={selectedCategory}
+              categoryOptions={categoryOptions}
               selectedSize={selectedSize}
               selectedColor={selectedColor}
               priceRange={priceRange}

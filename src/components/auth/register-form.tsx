@@ -14,6 +14,7 @@ type RegisterFormProps = {
   errors: RegisterErrors;
   onChange: (field: keyof RegisterValues, value: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  isSubmitting?: boolean;
 };
 
 function FieldError({ message }: { message?: string }) {
@@ -24,7 +25,7 @@ function FieldError({ message }: { message?: string }) {
   return <p className="mt-2 text-xs font-medium text-red-600">{message}</p>;
 }
 
-export function RegisterForm({ values, errors, onChange, onSubmit }: RegisterFormProps) {
+export function RegisterForm({ values, errors, onChange, onSubmit, isSubmitting = false }: RegisterFormProps) {
   return (
     <form className="space-y-5" onSubmit={onSubmit} noValidate>
       <div>
@@ -93,9 +94,10 @@ export function RegisterForm({ values, errors, onChange, onSubmit }: RegisterFor
 
       <button
         type="submit"
+        disabled={isSubmitting}
         className="h-12 w-full bg-zinc-950 text-xs font-semibold uppercase tracking-[0.3em] text-white transition hover:-translate-y-0.5 hover:bg-zinc-800"
       >
-        Create Account
+        {isSubmitting ? 'Creating Account...' : 'Create Account'}
       </button>
     </form>
   );

@@ -18,11 +18,15 @@ export function canAccessPath(role: Role | null | undefined, path: string) {
     return false;
   }
 
+  const isStorefront = storefrontPaths.some((allowed) => path === allowed || (allowed === '/products' && path.startsWith('/products/')));
+
   if (role === 'ADMIN') {
-    return roleRoutes.ADMIN.some((prefix) => path === prefix || path.startsWith(`${prefix}/`)) || utilityPaths.includes(path);
+    if (isStorefront) return false;
+    return true;
   }
 
   if (role === 'STAFF') {
+    if (isStorefront) return false;
     return roleRoutes.STAFF.some((prefix) => path === prefix || path.startsWith(`${prefix}/`)) || utilityPaths.includes(path);
   }
 

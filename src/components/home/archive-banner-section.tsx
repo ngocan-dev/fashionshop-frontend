@@ -15,7 +15,7 @@ export function ArchiveBannerSection() {
             Re-discovering our seminal silhouettes from the past decade. Restored and re-imagined for the modern curator.
           </p>
           <Link
-            href="/shop?collection=archive"
+            href="/products?search=archive"
             className="mt-9 inline-flex min-h-12 items-center justify-center border border-zinc-200 bg-black px-8 text-[0.68rem] font-semibold tracking-[0.2em] text-black transition hover:bg-zinc-200"
           >
             EXPLORE THE VAULT

@@ -12,6 +12,7 @@ type LoginFormProps = {
   errors: LoginErrors;
   onChange: (field: keyof LoginValues, value: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  isSubmitting?: boolean;
 };
 
 function FieldError({ message }: { message?: string }) {
@@ -22,7 +23,7 @@ function FieldError({ message }: { message?: string }) {
   return <p className="mt-2 text-xs font-medium text-red-600">{message}</p>;
 }
 
-export function LoginForm({ values, errors, onChange, onSubmit }: LoginFormProps) {
+export function LoginForm({ values, errors, onChange, onSubmit, isSubmitting = false }: LoginFormProps) {
   return (
     <form className="space-y-5" onSubmit={onSubmit} noValidate>
       <div>
@@ -64,9 +65,10 @@ export function LoginForm({ values, errors, onChange, onSubmit }: LoginFormProps
 
       <button
         type="submit"
+        disabled={isSubmitting}
         className="h-12 w-full bg-zinc-950 text-xs font-semibold uppercase tracking-[0.3em] text-white transition hover:-translate-y-0.5 hover:bg-zinc-800"
       >
-        Sign In
+        {isSubmitting ? 'Signing In...' : 'Sign In'}
       </button>
     </form>
   );

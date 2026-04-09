@@ -2,7 +2,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { categories } from '@/data/homepage-data';
 
-export function CategoryCurationSection() {
+type CategoryCurationItem = {
+  id: string;
+  title: string;
+  collectionLabel: string;
+  image: string;
+  href: string;
+};
+
+export function CategoryCurationSection({ categories: items = categories }: { categories?: CategoryCurationItem[] }) {
   return (
     <section className="bg-zinc-100 py-16 md:py-20">
       <div className="mx-auto w-full max-w-[1440px] px-6 md:px-8 lg:px-12">
@@ -14,7 +22,7 @@ export function CategoryCurationSection() {
         </div>
 
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {categories.map((category) => (
+          {items.map((category) => (
             <Link
               key={category.id}
               href={category.href}

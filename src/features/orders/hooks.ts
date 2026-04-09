@@ -25,6 +25,8 @@ export function useCreateOrderMutation() {
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: queryKeys.orders });
       await queryClient.invalidateQueries({ queryKey: queryKeys.cart });
+      await queryClient.invalidateQueries({ queryKey: queryKeys.cartSummary });
+      await queryClient.invalidateQueries({ queryKey: ['orders', 'checkout-summary'] });
     },
   });
 }
@@ -56,6 +58,7 @@ export function useCancelMyOrderMutation(orderId: string) {
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: queryKeys.order(orderId) });
       await queryClient.invalidateQueries({ queryKey: [...queryKeys.orders, 'my'] });
+      await queryClient.invalidateQueries({ queryKey: [...queryKeys.order(orderId), 'payment'] });
     },
   });
 }

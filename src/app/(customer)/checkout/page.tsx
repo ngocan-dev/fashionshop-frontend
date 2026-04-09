@@ -1,17 +1,22 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { LoadingState } from '@/components/common/loading-state';
 import { EmptyState } from '@/components/common/empty-state';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { useCheckoutSummaryQuery, useCreateOrderMutation } from '@/features/orders/hooks';
+import { useCheckoutSummaryQuery, useCreateOrderMutation, useUpdateCheckoutPaymentMethodMutation } from '@/features/orders/hooks';
 import { CheckoutForm } from '@/features/orders/components/checkout-form';
+import type { ParsedApiError } from '@/lib/api/errors';
 
 export default function CheckoutPage() {
+  const router = useRouter();
   const summaryQuery = useCheckoutSummaryQuery();
   const createOrderMutation = useCreateOrderMutation();
+  const updatePaymentMethodMutation = useUpdateCheckoutPaymentMethodMutation();
 
   if (summaryQuery.isLoading) return <LoadingState label="Loading checkout" />;
+  if (summaryQuery.isError) return <EmptyState title="Checkout unavailable" description="Unable to load checkout at the moment." actionLabel="Back to cart" actionHref="/cart" />;
   if (!summaryQuery.data) return <EmptyState title="Checkout unavailable" description="Add items to your cart first." actionLabel="Go to cart" actionHref="/cart" />;
 
   return (
@@ -20,7 +25,30 @@ export default function CheckoutPage() {
         <h1 className="text-2xl font-semibold">Checkout</h1>
       </CardHeader>
       <CardContent className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-        <CheckoutForm summary={summaryQuery.data} onSubmit={(values) => createOrderMutation.mutate(values, { onSuccess: () => toast.success('Order placed') })} />
+        <CheckoutForm
+          summary={summaryQuery.data}
+          isSubmitting={createOrderMutation.isPending}
+          onPaymentMethodChange={(paymentMethod) => {
+            updatePaymentMethodMutation.mutate(paymentMethod, {
+              onError: (error) => {
+                const apiError = error as ParsedApiError;
+                toast.error(apiError.message || 'Unable to update payment method');
+              },
+            });
+          }}
+          onSubmit={(values) => {
+            createOrderMutation.mutate(values, {
+              onSuccess: (order) => {
+                toast.success('Order placed');
+                router.push(`/orders/${order.id}`);
+              },
+              onError: (error) => {
+                const apiError = error as ParsedApiError;
+                toast.error(apiError.message || 'Unable to place order');
+              },
+            });
+          }}
+        />
         <div className="rounded-3xl bg-muted/30 p-5">
           <h2 className="font-semibold">Order summary</h2>
           <div className="mt-4 space-y-2 text-sm">

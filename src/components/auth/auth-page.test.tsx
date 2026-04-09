@@ -8,6 +8,11 @@ vi.mock('next/navigation', () => ({
   }),
 }));
 
+vi.mock('@/features/auth/hooks', () => ({
+  useLoginMutation: () => ({ mutate: vi.fn(), isPending: false }),
+  useRegisterMutation: () => ({ mutate: vi.fn(), isPending: false }),
+}));
+
 import { AuthPage } from './auth-page';
 
 describe('AuthPage', () => {
@@ -35,7 +40,7 @@ describe('AuthPage', () => {
 
     await user.click(screen.getByRole('button', { name: 'Sign In' }));
 
-    expect(screen.getByText('Email address is required.')).toBeInTheDocument();
-    expect(screen.getByText('Password is required.')).toBeInTheDocument();
+    expect(screen.getByText('Enter a valid email address')).toBeInTheDocument();
+    expect(screen.getByText('Password must be at least 8 characters')).toBeInTheDocument();
   });
 });

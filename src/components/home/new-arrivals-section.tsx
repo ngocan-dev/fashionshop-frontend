@@ -2,7 +2,16 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { newArrivals } from '@/data/homepage-data';
 
-export function NewArrivalsSection() {
+type NewArrivalItem = {
+  id: string;
+  name: string;
+  category: string;
+  price: string;
+  image: string;
+  href: string;
+};
+
+export function NewArrivalsSection({ items = newArrivals }: { items?: NewArrivalItem[] }) {
   return (
     <section className="bg-zinc-100 py-12 md:py-16">
       <div className="mx-auto w-full max-w-[1440px] px-6 md:px-8 lg:px-12">
@@ -13,7 +22,7 @@ export function NewArrivalsSection() {
         </div>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
-          {newArrivals.map((item) => (
+          {items.map((item) => (
             <Link key={item.id} href={item.href} className="group block">
               <div className="relative overflow-hidden border border-zinc-200 bg-white">
                 <div className="relative aspect-[4/5]">

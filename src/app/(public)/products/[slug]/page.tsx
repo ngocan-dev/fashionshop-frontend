@@ -1,15 +1,22 @@
 'use client';
 
 import { useParams } from 'next/navigation';
+import { toast } from 'sonner';
 import { EmptyState } from '@/components/common/empty-state';
 import { LoadingState } from '@/components/common/loading-state';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useStoreProductQuery } from '@/features/products/hooks';
+import { useAddCartItemMutation } from '@/features/cart/hooks';
+import { useAddWishlistItemMutation, useWishlistContainsQuery } from '@/features/wishlist/hooks';
+import type { ParsedApiError } from '@/lib/api/errors';
 
 export default function ProductDetailPage() {
   const params = useParams<{ slug: string }>();
   const { data, isLoading, isError } = useStoreProductQuery(params.slug);
+  const addCartMutation = useAddCartItemMutation();
+  const addWishlistMutation = useAddWishlistItemMutation();
+  const wishlistContainsQuery = useWishlistContainsQuery(data?.id ?? '');
 
   if (isLoading) return <div className="container-shell py-10"><LoadingState label="Loading product" /></div>;
   if (isError || !data) return <div className="container-shell py-10"><EmptyState title="Product unavailable" description="The requested product could not be loaded." actionLabel="Browse products" actionHref="/products" /></div>;
@@ -28,8 +35,38 @@ export default function ProductDetailPage() {
           <p className="text-muted-foreground">{data.description}</p>
           <div className="text-3xl font-semibold">${data.price.toFixed(2)}</div>
           <div className="flex gap-3">
-            <Button>Add to cart</Button>
-            <Button variant="outline">Add to wishlist</Button>
+            <Button
+              disabled={addCartMutation.isPending}
+              onClick={() => {
+                addCartMutation.mutate(
+                  { productId: data.id, quantity: 1 },
+                  {
+                    onSuccess: () => toast.success('Added to cart'),
+                    onError: (error) => {
+                      const apiError = error as ParsedApiError;
+                      toast.error(apiError.message || 'Unable to add product to cart');
+                    },
+                  },
+                );
+              }}
+            >
+              {addCartMutation.isPending ? 'Adding...' : 'Add to cart'}
+            </Button>
+            <Button
+              variant="outline"
+              disabled={addWishlistMutation.isPending || Boolean(wishlistContainsQuery.data)}
+              onClick={() => {
+                addWishlistMutation.mutate(data.id, {
+                  onSuccess: () => toast.success('Added to wishlist'),
+                  onError: (error) => {
+                    const apiError = error as ParsedApiError;
+                    toast.error(apiError.message || 'Unable to add product to wishlist');
+                  },
+                });
+              }}
+            >
+              {wishlistContainsQuery.data ? 'In wishlist' : addWishlistMutation.isPending ? 'Adding...' : 'Add to wishlist'}
+            </Button>
           </div>
         </div>
       </div>

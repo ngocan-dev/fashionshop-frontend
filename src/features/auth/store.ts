@@ -48,8 +48,3 @@ export function useAuthSession() {
     })),
   );
 }
-
-export function clearSessionAndRedirect(router?: { replace: (path: string) => void }) {
-  useAuthStore.getState().clearSession();
-  router?.replace('/login');
-}

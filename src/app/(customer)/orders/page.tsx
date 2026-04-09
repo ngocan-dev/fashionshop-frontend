@@ -18,8 +18,9 @@ export default function OrdersPage() {
       columns={[
         { header: 'Order', cell: (order) => order.orderNumber ?? order.id },
         { header: 'Status', cell: (order) => order.status },
+        { header: 'Payment', cell: (order) => order.paymentMethod ?? '-' },
         { header: 'Total', cell: (order) => `$${order.total.toFixed(2)}` },
-        { header: 'Action', cell: (order) => <Link className="text-brand-700" href={`/orders/${order.id}`}>View</Link> },
+        { header: 'Action', cell: (order) => <div className="flex gap-3"><Link className="text-brand-700" href={`/orders/${order.id}`}>View</Link><Link className="text-brand-700" href={`/orders/${order.id}/payment`}>Payment</Link></div> },
       ]}
     />
   );

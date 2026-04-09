@@ -3,6 +3,7 @@ import type { ProductCategory } from './types';
 
 type ProductFiltersProps = {
   selectedCategory: ProductCategory | 'All Products';
+  categoryOptions?: Array<ProductCategory | 'All Products'>;
   selectedSize: string;
   selectedColor: string;
   priceRange: number;
@@ -12,7 +13,7 @@ type ProductFiltersProps = {
   onPriceChange: (value: number) => void;
 };
 
-const categoryOptions: Array<ProductCategory | 'All Products'> = ['All Products', 'Outerwear', 'Tailoring', 'Knitwear', 'Accessories'];
+const defaultCategoryOptions: Array<ProductCategory | 'All Products'> = ['All Products', 'Outerwear', 'Tailoring', 'Knitwear', 'Accessories'];
 const sizeOptions = ['XS', 'S', 'M', 'L', 'XL'];
 const colorOptions = [
   { id: 'black', label: 'Black', swatch: '#0b0b0c' },
@@ -24,6 +25,7 @@ const colorOptions = [
 
 export function ProductFilters({
   selectedCategory,
+  categoryOptions = defaultCategoryOptions,
   selectedSize,
   selectedColor,
   priceRange,
