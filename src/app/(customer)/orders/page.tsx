@@ -10,8 +10,8 @@ export default function OrdersPage() {
   const ordersQuery = useMyOrdersQuery();
 
   if (ordersQuery.isLoading) return <LoadingState label="Loading orders" />;
-  if (ordersQuery.isError) return <EmptyState title="Orders unavailable" description="Unable to load your orders right now." actionLabel="Browse products" actionHref="/products" />;
-  if (!ordersQuery.data || ordersQuery.data.length === 0) return <EmptyState title="No orders yet" description="Your order history will appear here." actionLabel="Browse products" actionHref="/products" />;
+  if (ordersQuery.isError) return <EmptyState title="Orders unavailable" description="Unable to load your orders right now." actionLabel="Browse products" actionHref="/shop" />;
+  if (!ordersQuery.data || ordersQuery.data.length === 0) return <EmptyState title="No orders yet" description="Your order history will appear here." actionLabel="Browse products" actionHref="/shop" />;
 
   return (
     <DataTable

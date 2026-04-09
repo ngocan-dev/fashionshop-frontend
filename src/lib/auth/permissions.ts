@@ -38,7 +38,7 @@ export function canAccessPath(role: Role | null | undefined, path: string) {
 }
 
 export function redirectForRole(role: Role | null | undefined) {
-  if (role === 'ADMIN') return '/admin/dashboard';
+  if (role === 'ADMIN') return '/dashboard';
   if (role === 'STAFF') return '/staff/products';
   if (role === 'CUSTOMER') return '/account';
   return '/';

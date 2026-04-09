@@ -13,7 +13,7 @@ export default function WishlistPage() {
   const deleteMutation = useDeleteWishlistItemMutation();
 
   if (wishlistQuery.isLoading) return <LoadingState label="Loading wishlist" />;
-  if (!wishlistQuery.data || wishlistQuery.data.length === 0) return <EmptyState title="Wishlist is empty" description="Save products you want to revisit later." actionLabel="Browse products" actionHref="/products" icon={<Heart className="h-5 w-5" />} />;
+  if (!wishlistQuery.data || wishlistQuery.data.length === 0) return <EmptyState title="Wishlist is empty" description="Save products you want to revisit later." actionLabel="Browse products" actionHref="/shop" icon={<Heart className="h-5 w-5" />} />;
 
   return (
     <Card>

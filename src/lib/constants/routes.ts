@@ -7,7 +7,7 @@ export const authRoutes = ['/auth', '/login', '/register'] as const;
 export const roleRoutes: Record<Exclude<Role, 'GUEST'>, string[]> = {
   CUSTOMER: ['/account', '/account/edit', '/cart', '/wishlist', '/checkout', '/orders', '/invoices'],
   STAFF: ['/staff/products', '/staff/categories', '/staff/orders'],
-  ADMIN: ['/admin'],
+  ADMIN: ['/dashboard', '/staff-accounts', '/customers'],
 };
 
 export const routePaths = {
@@ -24,7 +24,7 @@ export const routePaths = {
   staffProducts: '/staff/products',
   staffCategories: '/staff/categories',
   staffOrders: '/staff/orders',
-  adminDashboard: '/admin/dashboard',
-  adminStaff: '/admin/staff-accounts',
-  adminCustomers: '/admin/customers',
+  adminDashboard: '/dashboard',
+  adminStaff: '/staff-accounts',
+  adminCustomers: '/customers',
 } as const;

@@ -10,7 +10,7 @@ import { AccountMenu } from './account-menu';
 
 const navItems = [
   { label: 'Home', href: '/' },
-  { label: 'Shop', href: '/products' },
+  { label: 'Shop', href: '/shop' },
   { label: 'About Us', href: '/about' },
   { label: 'Contact', href: '/contact' },
   { label: 'Policies', href: '/policies' },

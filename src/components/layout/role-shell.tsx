@@ -16,9 +16,9 @@ const navigationByRole = {
     { href: '/staff/orders', label: 'Orders', icon: ShoppingBag },
   ],
   ADMIN: [
-    { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { href: '/admin/staff-accounts', label: 'Staff', icon: Users },
-    { href: '/admin/customers', label: 'Customers', icon: ShoppingBag },
+    { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { href: '/staff-accounts', label: 'Staff', icon: Users },
+    { href: '/customers', label: 'Customers', icon: ShoppingBag },
   ],
 } as const;
 

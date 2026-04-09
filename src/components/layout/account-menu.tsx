@@ -13,6 +13,7 @@ const menuItems = [
   { label: 'Profile', href: '/account' },
   { label: 'Cart', href: '/cart' },
   { label: 'Order', href: '/orders' },
+  { label: 'Wishlist', href: '/wishlist' },
 ] as const;
 
 export function AccountMenu({ isLoggedIn, onLogout }: AccountMenuProps) {

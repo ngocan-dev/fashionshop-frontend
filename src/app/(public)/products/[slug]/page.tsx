@@ -19,7 +19,7 @@ export default function ProductDetailPage() {
   const wishlistContainsQuery = useWishlistContainsQuery(data?.id ?? '');
 
   if (isLoading) return <div className="container-shell py-10"><LoadingState label="Loading product" /></div>;
-  if (isError || !data) return <div className="container-shell py-10"><EmptyState title="Product unavailable" description="The requested product could not be loaded." actionLabel="Browse products" actionHref="/products" /></div>;
+  if (isError || !data) return <div className="container-shell py-10"><EmptyState title="Product unavailable" description="The requested product could not be loaded." actionLabel="Browse products" actionHref="/shop" /></div>;
 
   return (
     <div className="container-shell py-10">

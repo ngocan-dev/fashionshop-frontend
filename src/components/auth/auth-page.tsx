@@ -61,19 +61,17 @@ export function AuthPage({ initialTab = 'login' }: AuthPageProps) {
     event.preventDefault();
 
     const parseResult = loginSchema.safeParse(loginValues);
-    const nextErrors: LoginErrors = parseResult.success
-      ? {}
-      : {
-          email: parseResult.error.flatten().fieldErrors.email?.[0],
-          password: parseResult.error.flatten().fieldErrors.password?.[0],
-        };
-
-    setLoginErrors(nextErrors);
-    setStatusMessage('');
-
-    if (Object.keys(nextErrors).length > 0) {
+    if (!parseResult.success) {
+      setLoginErrors({
+        email: parseResult.error.flatten().fieldErrors.email?.[0],
+        password: parseResult.error.flatten().fieldErrors.password?.[0],
+      });
+      setStatusMessage('');
       return;
     }
+
+    setLoginErrors({});
+    setStatusMessage('');
 
     loginMutation.mutate(parseResult.data, {
       onError: (error) => {
@@ -87,21 +85,19 @@ export function AuthPage({ initialTab = 'login' }: AuthPageProps) {
     event.preventDefault();
 
     const parseResult = registerSchema.safeParse(registerValues);
-    const nextErrors: RegisterErrors = parseResult.success
-      ? {}
-      : {
-          fullName: parseResult.error.flatten().fieldErrors.fullName?.[0],
-          email: parseResult.error.flatten().fieldErrors.email?.[0],
-          password: parseResult.error.flatten().fieldErrors.password?.[0],
-          confirmPassword: parseResult.error.flatten().fieldErrors.confirmPassword?.[0],
-        };
-
-    setRegisterErrors(nextErrors);
-    setStatusMessage('');
-
-    if (Object.keys(nextErrors).length > 0) {
+    if (!parseResult.success) {
+      setRegisterErrors({
+        fullName: parseResult.error.flatten().fieldErrors.fullName?.[0],
+        email: parseResult.error.flatten().fieldErrors.email?.[0],
+        password: parseResult.error.flatten().fieldErrors.password?.[0],
+        confirmPassword: parseResult.error.flatten().fieldErrors.confirmPassword?.[0],
+      });
+      setStatusMessage('');
       return;
     }
+
+    setRegisterErrors({});
+    setStatusMessage('');
 
     registerMutation.mutate(parseResult.data, {
       onError: (error) => {

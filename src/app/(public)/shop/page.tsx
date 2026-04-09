@@ -42,7 +42,7 @@ function sortProducts(products: ProductListingItem[], sortBy: ProductSortOption)
   return list;
 }
 
-export default function ProductsPage() {
+export default function ShopPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -131,7 +131,7 @@ export default function ProductsPage() {
     return (
       <main className="min-h-screen bg-[#f6f6f3] text-zinc-900">
         <div className="mx-auto max-w-[1520px] px-4 py-6 sm:px-6 lg:px-10 lg:py-10">
-          <EmptyState title="Products unavailable" description="Please try again in a moment." actionLabel="Refresh" actionHref="/products" />
+          <EmptyState title="Products unavailable" description="Please try again in a moment." actionLabel="Refresh" actionHref="/shop" />
         </div>
       </main>
     );

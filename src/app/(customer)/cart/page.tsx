@@ -20,8 +20,8 @@ export default function CartPage() {
   const isMutating = deleteMutation.isPending || quantityMutation.isPending;
 
   if (cartQuery.isLoading) return <LoadingState label="Loading cart" />;
-  if (cartQuery.isError) return <EmptyState title="Cart unavailable" description="Unable to load your cart right now." actionLabel="Browse products" actionHref="/products" icon={<ShoppingCart className="h-5 w-5" />} />;
-  if (!cartQuery.data) return <EmptyState title="Cart is empty" description="Add products from the catalog to begin checkout." actionLabel="Browse products" actionHref="/products" icon={<ShoppingCart className="h-5 w-5" />} />;
+  if (cartQuery.isError) return <EmptyState title="Cart unavailable" description="Unable to load your cart right now." actionLabel="Browse products" actionHref="/shop" icon={<ShoppingCart className="h-5 w-5" />} />
+  if (!cartQuery.data) return <EmptyState title="Cart is empty" description="Add products from the catalog to begin checkout." actionLabel="Browse products" actionHref="/shop" icon={<ShoppingCart className="h-5 w-5" />} />;
 
   return (
     <>
@@ -31,7 +31,7 @@ export default function CartPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           {cartQuery.data.items.length === 0 ? (
-            <EmptyState title="No items in cart" description="Your cart is currently empty." actionLabel="Browse products" actionHref="/products" />
+            <EmptyState title="No items in cart" description="Your cart is currently empty." actionLabel="Browse products" actionHref="/shop" />
           ) : (
             cartQuery.data.items.map((item) => {
               return (

@@ -25,13 +25,13 @@ export function HeroSection() {
 
           <div className="mt-8 flex flex-wrap gap-3 md:mt-10">
             <Link
-              href="/products"
+              href="/shop"
               className="inline-flex min-h-12 items-center justify-center border border-zinc-950 bg-zinc-950 px-6 text-[0.68rem] font-semibold tracking-[0.2em] !text-white transition hover:bg-zinc-800"
             >
               SHOP THE COLLECTION
             </Link>
             <Link
-              href="/products"
+              href="/shop"
               className="inline-flex min-h-12 items-center justify-center border border-zinc-100/50 bg-white/8 px-6 text-[0.68rem] font-semibold tracking-[0.2em] text-white backdrop-blur-sm transition hover:bg-white/15"
             >
               VIEW LOOKBOOK
