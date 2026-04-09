@@ -53,8 +53,32 @@ export async function deleteManageProduct(id: string) {
 }
 
 export async function fetchStoreProducts(filter?: ProductFilter) {
-  const response = await api.get<ApiResponse<Product[]>>('/api/store/products', { params: filter });
-  return apiRequest(Promise.resolve(response));
+  if (process.env.NODE_ENV !== 'production') {
+    console.debug('[ProductsService] fetchStoreProducts:start', {
+      baseURL: api.defaults.baseURL,
+      path: '/api/store/products',
+      params: filter,
+    });
+  }
+
+  try {
+    const response = await api.get<ApiResponse<Product[]>>('/api/store/products', { params: filter });
+
+    if (process.env.NODE_ENV !== 'production') {
+      console.debug('[ProductsService] fetchStoreProducts:response', {
+        status: response.status,
+        success: response.data?.success,
+        length: Array.isArray(response.data?.data) ? response.data.data.length : undefined,
+      });
+    }
+
+    return apiRequest(Promise.resolve(response));
+  } catch (error) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.debug('[ProductsService] fetchStoreProducts:error', error);
+    }
+    throw error;
+  }
 }
 
 export async function fetchStoreProduct(idOrSlug: string) {
