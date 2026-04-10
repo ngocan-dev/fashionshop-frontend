@@ -1,35 +1,214 @@
 'use client';
 
+import Link from 'next/link';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { EmptyState } from '@/components/common/empty-state';
 import { LoadingState } from '@/components/common/loading-state';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { useMeQuery } from '@/features/users/hooks';
-import { ProfileForm } from '@/features/users/components/profile-form';
-import { useUpdateMeMutation } from '@/features/users/hooks';
-import { toast } from 'sonner';
+import { useMyOrdersQuery as useOrdersQueryFromOrders } from '@/features/orders/hooks';
+import { clearStoredSession } from '@/lib/auth/storage';
 
 export default function AccountPage() {
+  const router = useRouter();
   const meQuery = useMeQuery();
-  const updateMutation = useUpdateMeMutation();
+  const ordersQuery = useOrdersQueryFromOrders();
+  const hasBackendError = meQuery.isError || ordersQuery.isError;
 
-  if (meQuery.isLoading) return <LoadingState label="Loading account" />;
-  if (!meQuery.data) return <EmptyState title="Account not found" description="Please log in again." actionLabel="Log in" actionHref="/login" />;
+  // Show loading state
+  if (meQuery.isPending || ordersQuery.isPending) {
+    return <LoadingState />;
+  }
+
+  if (!meQuery.data && !hasBackendError) {
+    return (
+      <EmptyState
+        title="Account not found"
+        description="Please log in again."
+        actionLabel="Log in"
+        actionHref="/auth"
+      />
+    );
+  }
+
+  const user = meQuery.data;
+  const accountOrders = ordersQuery.data ?? [];
+  const recentOrder = accountOrders[0];
 
   return (
-    <Card>
-      <CardHeader>
-        <h1 className="text-2xl font-semibold">Account</h1>
-      </CardHeader>
-      <CardContent>
-        <div className="mb-6 grid gap-2 text-sm text-muted-foreground">
-          <div>Email: {meQuery.data.email}</div>
-          <div>Role: {meQuery.data.role}</div>
+    <main className="mx-auto min-h-screen max-w-5xl px-6 py-10 font-body text-[#1a1c1c] md:px-12 lg:px-0 lg:py-14">
+      {hasBackendError && (
+        <div className="mb-8 rounded-lg bg-[#f3f3f4] p-4 text-center">
+          <p className="text-sm text-[#7a7a7a]">Unable to load account data. Showing layout while content is unavailable.</p>
+          <Link
+            href="/auth"
+            className="mt-3 inline-block rounded-md bg-black px-6 py-3 text-center text-sm font-bold uppercase tracking-[0.24em] !text-white no-underline transition-all hover:bg-[#474747] hover:!text-white focus-visible:!text-white"
+            style={{ color: '#ffffff' }}
+          >
+            Log In
+          </Link>
         </div>
-        <ProfileForm
-          user={meQuery.data}
-          onSubmit={(values) => updateMutation.mutate(values, { onSuccess: () => toast.success('Profile updated') })}
-        />
-      </CardContent>
-    </Card>
+      )}
+      <section className="mb-20">
+        <div className="flex flex-col md:flex-row items-start md:items-center gap-8 md:gap-12">
+          <div className="h-48 w-48 flex-shrink-0 overflow-hidden rounded-lg bg-[#f3f3f4]">
+            {user?.avatarUrl ? (
+              <Image alt={user.fullName} src={user.avatarUrl} width={192} height={192} className="h-full w-full object-cover grayscale" />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center bg-[#f3f3f4] text-5xl font-black uppercase">
+                {user?.fullName?.charAt(0).toUpperCase() ?? 'U'}
+              </div>
+            )}
+          </div>
+
+          <div className="flex-1">
+            <span className="mb-2 block text-[10px] font-bold uppercase tracking-[0.3em] text-[#777777]">Member</span>
+            <h1 className="font-headline mb-6 text-5xl font-black uppercase tracking-[-0.06em] md:text-7xl">{user?.fullName ?? 'Your Account'}</h1>
+            <div className="flex flex-wrap gap-x-12 gap-y-4">
+              <div>
+                <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.3em] text-[#777777]">Orders</p>
+                <p className="text-xl font-bold">{accountOrders.length}</p>
+              </div>
+              <div>
+                <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.3em] text-[#777777]">Since</p>
+                <p className="text-xl font-bold">{new Date().getFullYear().toString()}</p>
+              </div>
+              <div>
+                <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.3em] text-[#777777]">Location</p>
+                <p className="text-xl font-bold">Not Set</p>
+              </div>
+            </div>
+            <div className="mt-8 flex flex-wrap gap-4">
+              <Link href="/account/edit" className="rounded-md bg-black px-8 py-3 text-sm font-bold uppercase tracking-[0.24em] !text-white transition-all duration-200 hover:scale-105 hover:bg-[#474747] hover:!text-white" style={{ color: '#ffffff' }}>
+                Edit Profile
+              </Link>
+              <button
+                type="button"
+                onClick={() => {
+                  clearStoredSession();
+                  router.push('/auth');
+                }}
+                className="rounded-md border border-[#e6e6e6] bg-white px-8 py-3 text-sm font-bold uppercase tracking-[0.24em] text-black transition-all duration-200 hover:bg-[#f9f9f9]"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-12">
+        <section className="editorial-shadow rounded-xl bg-white p-8 md:col-span-8">
+          <div className="mb-10 flex items-center justify-between">
+            <h2 className="font-headline text-2xl font-bold uppercase tracking-tight">Account Details</h2>
+            <span className="material-symbols-outlined text-[#c6c6c6]">verified_user</span>
+          </div>
+          <div className="grid grid-cols-1 gap-y-8 gap-x-12 sm:grid-cols-2">
+            <div>
+              <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.3em] text-[#777777]">Full Name</label>
+              <p className="text-base font-medium">{user?.fullName ?? 'Unavailable'}</p>
+            </div>
+            <div>
+              <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.3em] text-[#777777]">Email Address</label>
+              <p className="text-base font-medium">{user?.email ?? 'Unavailable'}</p>
+            </div>
+            <div>
+              <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.3em] text-[#777777]">Phone</label>
+              <p className="text-base font-medium">{user?.phoneNumber ?? '+44 7700 900077'}</p>
+            </div>
+            <div>
+              <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.3em] text-[#777777]">Language Preference</label>
+              <p className="text-base font-medium">English</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="rounded-xl bg-black p-8 text-white md:col-span-4">
+          <div>
+            <h2 className="font-headline mb-2 text-2xl font-bold uppercase tracking-tight">Status</h2>
+            <p className="text-xs uppercase tracking-[0.3em] text-white/60">Active Customer</p>
+          </div>
+          <div className="mt-20">
+            <p className="font-headline mb-2 text-4xl font-black">{accountOrders.length}</p>
+            <p className="text-[10px] font-bold uppercase tracking-[0.3em] opacity-60">Total Orders</p>
+          </div>
+          <div className="mt-6 border-t border-white/10 pt-6">
+            <Link href="/orders" className="text-[10px] font-bold uppercase tracking-[0.3em] hover:underline">
+              View Benefits →
+            </Link>
+          </div>
+        </section>
+
+        <section className="editorial-shadow rounded-xl bg-white p-8 md:col-span-6">
+          <div className="mb-8 flex items-center justify-between">
+            <h2 className="font-headline text-2xl font-bold uppercase tracking-tight">Address Book</h2>
+            <Link href="/checkout" className="border-b-2 border-black pb-1 text-[10px] font-black uppercase tracking-[0.3em]">
+              Manage
+            </Link>
+          </div>
+          <div className="space-y-6">
+            <div className="flex gap-4">
+              <span className="material-symbols-outlined mt-1 text-[#777777]">home</span>
+              <div>
+                <p className="mb-1 text-xs font-bold uppercase tracking-[0.24em]">Default Shipping</p>
+                <p className="text-sm leading-relaxed text-[#5e5e5e]">No default address saved</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="editorial-shadow rounded-xl bg-white p-8 md:col-span-6">
+          <div className="mb-8 flex items-center justify-between">
+            <h2 className="font-headline text-2xl font-bold uppercase tracking-tight">Payment</h2>
+            <Link href="/checkout" className="border-b-2 border-black pb-1 text-[10px] font-black uppercase tracking-[0.3em]">
+              Add New
+            </Link>
+          </div>
+          <div className="space-y-6">
+            <div className="flex items-center justify-between rounded-lg bg-[#f3f3f4] p-4">
+              <div className="flex items-center gap-4">
+                <span className="material-symbols-outlined text-black">credit_card</span>
+                <div>
+                  <p className="text-sm font-bold">No payment method saved</p>
+                  <p className="text-[10px] uppercase tracking-[0.3em] text-[#777777]">Add a payment method</p>
+                </div>
+              </div>
+              <span className="material-symbols-outlined text-[#c6c6c6]">chevron_right</span>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      {recentOrder && (
+        <>
+          <div className="mb-10 mt-24 text-center">
+            <h3 className="mb-4 text-[10px] font-bold uppercase tracking-[0.3em] text-[#777777]">Curated History</h3>
+            <div className="mx-auto h-[2px] w-12 bg-black" />
+          </div>
+
+          <section className="overflow-hidden rounded-xl bg-[#f3f3f4] p-1">
+            <div className="flex flex-col items-center justify-between gap-6 rounded-lg bg-white p-6 md:flex-row">
+              <div className="flex items-center gap-6">
+                <div className="h-24 w-20 overflow-hidden rounded bg-[#f3f3f4]">
+                  <div className="flex h-full w-full items-center justify-center bg-[#efefef] text-center text-xs font-bold uppercase tracking-[0.24em] text-[#777777]">
+                    {recentOrder.items[0]?.name ?? 'Order'}
+                  </div>
+                </div>
+                <div>
+                  <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.3em] text-[#777777]">Latest Order • {recentOrder.orderNumber || recentOrder.id}</p>
+                  <h4 className="font-headline font-bold">{recentOrder.items[0]?.name ?? 'Recent Purchase'}</h4>
+                  <p className="text-sm text-[#5e5e5e]">
+                    {recentOrder.status.charAt(0) + recentOrder.status.slice(1).toLowerCase()} on {new Date(recentOrder.createdAt ?? new Date()).toLocaleDateString()}
+                  </p>
+                </div>
+              </div>
+              <Link href={`/orders/${recentOrder.id}`} className="w-full rounded-md bg-black px-6 py-3 text-center text-[10px] font-bold uppercase tracking-[0.3em] text-white md:w-auto">
+                Track Package
+              </Link>
+            </div>
+          </section>
+        </>
+      )}
+    </main>
   );
 }
