@@ -7,9 +7,15 @@ export const metadata: Metadata = {
   description: 'FashionShop frontend for storefront, customer, staff, and admin flows',
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+          rel="stylesheet"
+        />
+      </head>
       <body className="min-h-screen bg-background text-foreground antialiased">
         <AppProviders>{children}</AppProviders>
       </body>
