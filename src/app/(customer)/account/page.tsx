@@ -5,6 +5,10 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { EmptyState } from '@/components/common/empty-state';
 import { LoadingState } from '@/components/common/loading-state';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { ProfileForm } from '@/features/users/components/profile-form';
+import { useUpdateMeMutation } from '@/features/users/hooks';
+import { toast } from 'sonner';
 import { useMeQuery } from '@/features/users/hooks';
 import { useMyOrdersQuery as useOrdersQueryFromOrders } from '@/features/orders/hooks';
 import { clearStoredSession } from '@/lib/auth/storage';
@@ -13,6 +17,7 @@ export default function AccountPage() {
   const router = useRouter();
   const meQuery = useMeQuery();
   const ordersQuery = useOrdersQueryFromOrders();
+  const updateMutation = useUpdateMeMutation();
   const hasBackendError = meQuery.isError || ordersQuery.isError;
 
   // Show loading state
@@ -98,30 +103,41 @@ export default function AccountPage() {
       </section>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-12">
-        <section className="editorial-shadow rounded-xl bg-white p-8 md:col-span-8">
-          <div className="mb-10 flex items-center justify-between">
+        <Card className="editorial-shadow overflow-hidden rounded-xl border-0 bg-white md:col-span-8">
+          <CardHeader className="mb-0 flex items-center justify-between border-b border-[#efefef] px-8 py-6">
             <h2 className="font-headline text-2xl font-bold uppercase tracking-tight">Account Details</h2>
             <span className="material-symbols-outlined text-[#c6c6c6]">verified_user</span>
-          </div>
-          <div className="grid grid-cols-1 gap-y-8 gap-x-12 sm:grid-cols-2">
-            <div>
-              <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.3em] text-[#777777]">Full Name</label>
-              <p className="text-base font-medium">{user?.fullName ?? 'Unavailable'}</p>
+          </CardHeader>
+          <CardContent className="space-y-8 px-8 py-8">
+            <div className="grid grid-cols-1 gap-y-8 gap-x-12 sm:grid-cols-2">
+              <div>
+                <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.3em] text-[#777777]">Full Name</label>
+                <p className="text-base font-medium">{user?.fullName ?? 'Unavailable'}</p>
+              </div>
+              <div>
+                <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.3em] text-[#777777]">Email Address</label>
+                <p className="text-base font-medium">{user?.email ?? 'Unavailable'}</p>
+              </div>
+              <div>
+                <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.3em] text-[#777777]">Phone</label>
+                <p className="text-base font-medium">{user?.phoneNumber ?? '+44 7700 900077'}</p>
+              </div>
+              <div>
+                <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.3em] text-[#777777]">Language Preference</label>
+                <p className="text-base font-medium">English</p>
+              </div>
             </div>
-            <div>
-              <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.3em] text-[#777777]">Email Address</label>
-              <p className="text-base font-medium">{user?.email ?? 'Unavailable'}</p>
-            </div>
-            <div>
-              <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.3em] text-[#777777]">Phone</label>
-              <p className="text-base font-medium">{user?.phoneNumber ?? '+44 7700 900077'}</p>
-            </div>
-            <div>
-              <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.3em] text-[#777777]">Language Preference</label>
-              <p className="text-base font-medium">English</p>
-            </div>
-          </div>
-        </section>
+            {!hasBackendError && user && (
+              <div className="border-t border-[#efefef] pt-8">
+                <p className="mb-4 text-[10px] font-bold uppercase tracking-[0.3em] text-[#777777]">Update Profile</p>
+                <ProfileForm
+                  user={user}
+                  onSubmit={(values) => updateMutation.mutate(values, { onSuccess: () => toast.success('Profile updated') })}
+                />
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
         <section className="rounded-xl bg-black p-8 text-white md:col-span-4">
           <div>
@@ -139,14 +155,14 @@ export default function AccountPage() {
           </div>
         </section>
 
-        <section className="editorial-shadow rounded-xl bg-white p-8 md:col-span-6">
-          <div className="mb-8 flex items-center justify-between">
+        <Card className="editorial-shadow overflow-hidden rounded-xl border-0 bg-white md:col-span-6">
+          <CardHeader className="mb-0 flex items-center justify-between border-b border-[#efefef] px-8 py-6">
             <h2 className="font-headline text-2xl font-bold uppercase tracking-tight">Address Book</h2>
             <Link href="/checkout" className="border-b-2 border-black pb-1 text-[10px] font-black uppercase tracking-[0.3em]">
               Manage
             </Link>
-          </div>
-          <div className="space-y-6">
+          </CardHeader>
+          <CardContent className="space-y-6 px-8 py-8">
             <div className="flex gap-4">
               <span className="material-symbols-outlined mt-1 text-[#777777]">home</span>
               <div>
@@ -154,17 +170,17 @@ export default function AccountPage() {
                 <p className="text-sm leading-relaxed text-[#5e5e5e]">No default address saved</p>
               </div>
             </div>
-          </div>
-        </section>
+          </CardContent>
+        </Card>
 
-        <section className="editorial-shadow rounded-xl bg-white p-8 md:col-span-6">
-          <div className="mb-8 flex items-center justify-between">
+        <Card className="editorial-shadow overflow-hidden rounded-xl border-0 bg-white md:col-span-6">
+          <CardHeader className="mb-0 flex items-center justify-between border-b border-[#efefef] px-8 py-6">
             <h2 className="font-headline text-2xl font-bold uppercase tracking-tight">Payment</h2>
             <Link href="/checkout" className="border-b-2 border-black pb-1 text-[10px] font-black uppercase tracking-[0.3em]">
               Add New
             </Link>
-          </div>
-          <div className="space-y-6">
+          </CardHeader>
+          <CardContent className="space-y-6 px-8 py-8">
             <div className="flex items-center justify-between rounded-lg bg-[#f3f3f4] p-4">
               <div className="flex items-center gap-4">
                 <span className="material-symbols-outlined text-black">credit_card</span>
@@ -175,8 +191,8 @@ export default function AccountPage() {
               </div>
               <span className="material-symbols-outlined text-[#c6c6c6]">chevron_right</span>
             </div>
-          </div>
-        </section>
+          </CardContent>
+        </Card>
       </div>
 
       {recentOrder && (

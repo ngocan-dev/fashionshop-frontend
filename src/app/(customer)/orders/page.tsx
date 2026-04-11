@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { EmptyState } from '@/components/common/empty-state';
 import { LoadingState } from '@/components/common/loading-state';
+import { DataTable } from '@/components/common/data-table';
+import { Button } from '@/components/ui/button';
 import { useMyOrdersQuery } from '@/features/orders/hooks';
 import { useState } from 'react';
 
@@ -56,19 +58,20 @@ export default function OrdersPage() {
 
       <nav className="mb-12 flex flex-wrap gap-4">
         {(['all', 'pending', 'shipped', 'delivered'] as const).map((status) => (
-          <button
+          <Button
             key={status}
             onClick={() => setFilterStatus(status)}
-            className={`rounded-md px-6 py-2 text-sm font-bold uppercase tracking-[0.24em] transition-all duration-200 ${filterStatus === status ? 'bg-black text-white hover:scale-105' : 'bg-[#e2e2e2] text-[#1a1c1c] hover:opacity-70'}`}
+            variant={filterStatus === status ? 'default' : 'outline'}
+            className={`rounded-md px-6 py-2 text-sm font-bold uppercase tracking-[0.24em] transition-all duration-200 ${filterStatus === status ? 'bg-black text-white hover:scale-105 hover:bg-black' : 'border-0 bg-[#e2e2e2] text-[#1a1c1c] hover:bg-[#d8d8d8]'}`}
           >
             {status.charAt(0).toUpperCase() + status.slice(1)}
-          </button>
+          </Button>
         ))}
       </nav>
 
-      <div className="grid grid-cols-1 gap-8 pb-24 md:grid-cols-2">
-        {hasBackendError &&
-          [...Array(4)].map((_, i) => (
+      {hasBackendError ? (
+        <div className="grid grid-cols-1 gap-8 pb-24 md:grid-cols-2">
+          {[...Array(4)].map((_, i) => (
             <div key={`skeleton-${i}`} className="space-y-4 rounded-lg bg-[#f3f3f4] p-6">
               <div className="h-4 w-32 rounded bg-[#e8e8e8]"></div>
               <div className="flex gap-2">
@@ -85,80 +88,51 @@ export default function OrdersPage() {
                 ))}
               </div>
               <div className="flex gap-3 pt-2">
-                <div className="flex-1 h-9 rounded bg-[#1a1c1c]"></div>
-                <div className="flex-1 h-9 rounded border border-[#e8e8e8]"></div>
+                <div className="h-9 flex-1 rounded bg-[#1a1c1c]"></div>
+                <div className="h-9 flex-1 rounded border border-[#e8e8e8]"></div>
               </div>
             </div>
           ))}
-        {!hasBackendError && filteredOrders.map((order) => (
-          <article
-            key={order.id}
-            className="flex flex-col justify-between rounded-xl bg-white p-8 transition-transform duration-200 hover:scale-[1.01]"
-          >
-            <div className="flex flex-col gap-6">
-              <div className="flex justify-between items-start">
-                <div>
-                  <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.3em] text-[#777777]">
-                    Order Reference
-                  </span>
-                  <h3 className="font-headline text-xl font-bold tracking-tight">#{order.orderNumber || order.id}</h3>
-                </div>
-                <span className={`rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-[0.24em] ${getStatusBadgeClass()}`}>
-                  {order.status}
-                </span>
-              </div>
-
-              {order.items && order.items.length > 0 && (
-                <div className="flex items-center gap-4">
-                  {order.items.slice(0, 2).map((item, idx) => (
-                    <div
-                      key={idx}
-                      className="h-20 w-16 flex-shrink-0 overflow-hidden rounded bg-[#f3f3f4]"
-                    >
-                      <div className="flex h-full w-full items-center justify-center p-2 text-center text-[10px] font-bold uppercase tracking-[0.18em] text-[#5e5e5e]">
-                        {item.name}
-                      </div>
-                    </div>
-                  ))}
-                  {order.items.length > 2 && (
-                    <div className="relative h-20 w-16 overflow-hidden rounded bg-[#f3f3f4]">
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-xs font-bold text-white">
-                        +{order.items.length - 2}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              <div className="grid grid-cols-3 gap-4">
-                <div>
-                  <span className="block text-[10px] font-bold uppercase tracking-[0.3em] text-[#777777]">Date</span>
-                  <p className="text-sm font-semibold tracking-tight">
-                    {new Date(order.createdAt || new Date()).toLocaleDateString()}
-                  </p>
-                </div>
-                <div>
-                  <span className="block text-[10px] font-bold uppercase tracking-[0.3em] text-[#777777]">Items</span>
-                  <p className="text-sm font-semibold tracking-tight">{order.items?.length ?? 0} piece{order.items?.length !== 1 ? 's' : ''}</p>
-                </div>
-                <div>
-                  <span className="block text-[10px] font-bold uppercase tracking-[0.3em] text-[#777777]">Total</span>
-                  <p className="text-sm font-semibold tracking-tight">${order.total.toFixed(2)}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-8 flex gap-3">
-              <button type="button" className="flex-1 rounded-md bg-black py-3 text-[10px] font-black uppercase tracking-[0.24em] text-white transition-opacity hover:opacity-90">
-                Track Shipment
-              </button>
-              <Link href={`/orders/${order.id}`} className="flex-1 rounded-md bg-[#f3f3f4] py-3 text-center text-[10px] font-black uppercase tracking-[0.24em] text-[#1a1c1c] transition-colors hover:bg-[#e8e8e8]">
-                View Details
-              </Link>
-            </div>
-          </article>
-        ))}
-      </div>
+        </div>
+      ) : (
+        <div className="pb-24">
+          <DataTable
+            data={filteredOrders}
+            emptyLabel={filterStatus === 'all' ? 'No orders found' : `No ${filterStatus} orders found`}
+            columns={[
+              {
+                header: 'Order',
+                cell: (order) => (
+                  <div>
+                    <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.24em] text-[#777777]">Reference</span>
+                    <p className="font-headline text-base font-bold">#{order.orderNumber ?? order.id}</p>
+                  </div>
+                ),
+              },
+              {
+                header: 'Status',
+                cell: (order) => <span className={`rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-[0.24em] ${getStatusBadgeClass()}`}>{order.status}</span>,
+              },
+              {
+                header: 'Placed',
+                cell: (order) => new Date(order.createdAt || new Date()).toLocaleDateString(),
+              },
+              {
+                header: 'Total',
+                cell: (order) => `$${order.total.toFixed(2)}`,
+              },
+              {
+                header: 'Action',
+                cell: (order) => (
+                  <Button asChild size="sm" className="rounded-md bg-black text-white hover:bg-[#474747]">
+                    <Link href={`/orders/${order.id}`}>View Details</Link>
+                  </Button>
+                ),
+              },
+            ]}
+          />
+        </div>
+      )}
 
       {!hasBackendError && filteredOrders.length === 0 && (
         <div className="text-center py-12">
@@ -174,21 +148,17 @@ export default function OrdersPage() {
 
       {hasBackendError && (
         <div className="mb-8 text-center">
-          <Link
-            href="/products"
-            className="rounded-md bg-black px-8 py-3 text-sm font-bold uppercase tracking-[0.24em] !text-white no-underline transition-all hover:bg-[#474747] hover:!text-white focus-visible:!text-white"
-            style={{ color: '#ffffff' }}
-          >
-            Browse Items
-          </Link>
+          <Button asChild className="rounded-md bg-black px-8 py-3 text-sm font-bold uppercase tracking-[0.24em] !text-white hover:bg-[#474747]">
+            <Link href="/products" style={{ color: '#ffffff' }}>Browse Items</Link>
+          </Button>
         </div>
       )}
 
       {!hasBackendError && filteredOrders.length > 0 && (
         <div className="mt-20 text-center">
-          <button type="button" className="border-b-2 border-black pb-2 text-sm font-bold uppercase tracking-[0.24em] transition-opacity hover:opacity-50">
+          <Button type="button" variant="ghost" className="h-auto rounded-none border-b-2 border-black p-0 pb-2 text-sm font-bold uppercase tracking-[0.24em] hover:bg-transparent hover:opacity-50">
             Load Older Orders
-          </button>
+          </Button>
         </div>
       )}
     </main>

@@ -7,6 +7,8 @@ import { ShoppingCart, Trash2 } from 'lucide-react';
 import { EmptyState } from '@/components/common/empty-state';
 import { LoadingState } from '@/components/common/loading-state';
 import { ConfirmDialog } from '@/components/common/confirm-dialog';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { useCartQuery, useDeleteCartItemMutation, useUpdateCartItemQuantityMutation } from '@/features/cart/hooks';
 import { useState } from 'react';
 
@@ -60,17 +62,20 @@ export default function CartPage() {
         <div className="lg:col-span-8 space-y-6">
           {hasBackendError && cart.items.length === 0 &&
             [...Array(3)].map((_, i) => (
-              <div key={`skeleton-${i}`} className="flex gap-4 rounded-lg bg-[#f3f3f4] p-4">
-                <div className="h-24 w-24 rounded bg-[#e8e8e8]"></div>
-                <div className="flex-1 space-y-3">
-                  <div className="h-4 w-32 rounded bg-[#e8e8e8]"></div>
-                  <div className="h-4 w-24 rounded bg-[#e8e8e8]"></div>
-                  <div className="h-6 w-20 rounded bg-[#e8e8e8]"></div>
-                </div>
-              </div>
+              <Card key={`skeleton-${i}`} className="rounded-lg border-0 bg-[#f3f3f4]">
+                <CardContent className="flex gap-4 p-4">
+                  <div className="h-24 w-24 rounded bg-[#e8e8e8]"></div>
+                  <div className="flex-1 space-y-3">
+                    <div className="h-4 w-32 rounded bg-[#e8e8e8]"></div>
+                    <div className="h-4 w-24 rounded bg-[#e8e8e8]"></div>
+                    <div className="h-6 w-20 rounded bg-[#e8e8e8]"></div>
+                  </div>
+                </CardContent>
+              </Card>
             ))}
           {cart.items.map((item) => (
-            <div key={item.id} className="group flex flex-col gap-8 border-b border-[#c6c6c633] pb-8 md:flex-row">
+            <Card key={item.id} className="group rounded-xl border-[#c6c6c633] bg-white">
+              <CardContent className="flex flex-col gap-8 p-6 md:flex-row">
               <div className="aspect-[4/5] w-full flex-shrink-0 overflow-hidden bg-[#f3f3f4] md:w-48">
                 {item.product.images && item.product.images.length > 0 ? (
                   <Image
@@ -112,7 +117,10 @@ export default function CartPage() {
 
                 <div className="mt-8 flex items-end justify-between">
                   <div className="flex items-center space-x-6 rounded-md bg-[#f3f3f4] px-4 py-2">
-                    <button
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
                       onClick={() => {
                         if (hasBackendError) {
                           toast.info('Cart data is unavailable right now.');
@@ -120,13 +128,16 @@ export default function CartPage() {
                         }
                         quantityMutation.mutate({ itemId: item.id, quantity: Math.max(1, item.quantity - 1) });
                       }}
-                      className="hover:opacity-50 transition-opacity"
+                      className="h-auto rounded-md p-1 hover:opacity-50"
                       aria-label="Decrease quantity"
                     >
                       <span className="material-symbols-outlined text-sm">remove</span>
-                    </button>
+                    </Button>
                     <span className="w-8 text-center text-sm font-bold tabular-nums">{item.quantity.toString().padStart(2, '0')}</span>
-                    <button
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
                       onClick={() => {
                         if (hasBackendError) {
                           toast.info('Cart data is unavailable right now.');
@@ -134,16 +145,17 @@ export default function CartPage() {
                         }
                         quantityMutation.mutate({ itemId: item.id, quantity: item.quantity + 1 });
                       }}
-                      className="hover:opacity-50 transition-opacity"
+                      className="h-auto rounded-md p-1 hover:opacity-50"
                       aria-label="Increase quantity"
                     >
                       <span className="material-symbols-outlined text-sm">add</span>
-                    </button>
+                    </Button>
                   </div>
                   <div className="font-headline text-xl font-bold">${(item.product.price * item.quantity).toFixed(2)}</div>
                 </div>
               </div>
-            </div>
+              </CardContent>
+            </Card>
           ))}
 
           <div className="flex justify-start">
@@ -156,10 +168,13 @@ export default function CartPage() {
         </div>
 
         <div className="lg:col-span-4">
-          <div className="editorial-shadow sticky top-32 rounded-xl bg-white p-8">
-            <h2 className="font-headline mb-8 text-xl font-black uppercase tracking-[-0.04em]">Summary</h2>
+          <Card className="editorial-shadow sticky top-32 overflow-hidden rounded-xl border-0 bg-white">
+            <CardHeader className="border-b border-[#efefef] px-8 py-6">
+              <h2 className="font-headline text-xl font-black uppercase tracking-[-0.04em]">Summary</h2>
+            </CardHeader>
+            <CardContent className="space-y-8 px-8 py-8">
 
-            <div className="mb-8 space-y-4">
+            <div className="space-y-4">
               <div className="flex justify-between text-sm">
                 <span className="text-[10px] font-bold uppercase tracking-[0.24em] text-[#5e5e5e]">Subtotal</span>
                 <span className="font-medium">${subtotal.toFixed(2)}</span>
@@ -180,20 +195,16 @@ export default function CartPage() {
 
             <div className="space-y-3">
               {hasBackendError && (
-                <Link
-                  href="/products"
-                  className="block w-full rounded-md bg-black py-4 text-center text-xs font-bold uppercase tracking-[0.24em] !text-white no-underline transition-all duration-300 hover:bg-[#474747] hover:!text-white"
-                  style={{ color: '#ffffff' }}
-                >
-                  Browse Items
-                </Link>
+                <Button asChild className="h-11 w-full rounded-md bg-black text-xs font-bold uppercase tracking-[0.24em] !text-white hover:bg-[#474747]">
+                  <Link href="/products" style={{ color: '#ffffff' }}>Browse Items</Link>
+                </Button>
               )}
-              <Link href="/checkout" className="block w-full rounded-md bg-black py-4 text-center text-xs font-bold uppercase tracking-[0.24em] !text-white transition-all duration-300 hover:scale-[1.02] hover:bg-[#474747] hover:!text-white active:scale-95" style={{ color: '#ffffff' }}>
-                Checkout
-              </Link>
-              <button type="button" className="w-full rounded-md border border-[#c6c6c64d] bg-white py-4 text-xs font-bold uppercase tracking-[0.24em] text-black transition-all duration-300 hover:bg-[#f3f3f4]">
+              <Button asChild className="h-11 w-full rounded-md bg-black text-xs font-bold uppercase tracking-[0.24em] !text-white transition-all duration-300 hover:scale-[1.02] hover:bg-[#474747] active:scale-95">
+                <Link href="/checkout" style={{ color: '#ffffff' }}>Checkout</Link>
+              </Button>
+              <Button type="button" variant="outline" className="h-11 w-full rounded-md border-[#c6c6c64d] bg-white text-xs font-bold uppercase tracking-[0.24em] text-black hover:bg-[#f3f3f4]">
                 Update Cart
-              </button>
+              </Button>
             </div>
 
             <div className="mt-8 flex items-center gap-2 text-[#777777]">
@@ -208,12 +219,13 @@ export default function CartPage() {
                   placeholder="ENTER CODE"
                   className="flex-1 rounded-md bg-[#f3f3f4] px-4 py-3 text-[10px] tracking-[0.24em] outline-none ring-0"
                 />
-                <button type="button" className="rounded-md bg-[#e8e8e8] px-4 transition-colors hover:bg-[#e2e2e2]">
+                <Button type="button" variant="ghost" className="h-auto rounded-md bg-[#e8e8e8] px-4 py-3 transition-colors hover:bg-[#e2e2e2]">
                   <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                </button>
+                </Button>
               </div>
             </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
 
