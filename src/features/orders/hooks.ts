@@ -3,6 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { cancelMyOrder, createOrder, fetchCheckoutSummary, fetchManageOrder, fetchManageOrders, fetchMyOrder, fetchMyOrderHistory, fetchMyOrderPayment, fetchMyOrderStatus, fetchMyOrders, fetchOrder, fetchOrders, updateCheckoutPaymentMethod, updateManageOrderStatus, updateOrderStatus } from './services';
 import { queryKeys } from '@/lib/api/query-keys';
+import type { OrderFilter } from '@/types/order';
 
 export function useCheckoutSummaryQuery() {
   return useQuery({ queryKey: ['orders', 'checkout-summary'], queryFn: fetchCheckoutSummary });
@@ -64,8 +65,11 @@ export function useOrdersQuery() {
   return useQuery({ queryKey: queryKeys.orders, queryFn: fetchOrders });
 }
 
-export function useManageOrdersQuery() {
-  return useQuery({ queryKey: [...queryKeys.orders, 'manage'], queryFn: fetchManageOrders });
+export function useManageOrdersQuery(filter?: OrderFilter) {
+  return useQuery({ 
+    queryKey: [...queryKeys.orders, 'manage', filter], 
+    queryFn: () => fetchManageOrders(filter) 
+  });
 }
 
 export function useManageOrderQuery(orderId: string) {

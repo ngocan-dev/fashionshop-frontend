@@ -1,6 +1,15 @@
 export type OrderStatus = 'PENDING' | 'CONFIRMED' | 'PROCESSING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
 
+export type PaymentStatus = 'PENDING' | 'PAID' | 'FAILED' | 'REFUNDED';
+
 export type PaymentMethod = 'COD' | 'CARD' | 'BANK_TRANSFER' | 'E_WALLET';
+
+export type OrderFilter = {
+  keyword?: string;
+  status?: OrderStatus | '';
+  page?: number;
+  size?: number;
+};
 
 export type OrderSummaryItem = {
   productId: string;
@@ -14,7 +23,10 @@ export type Order = {
   id: string;
   orderNumber?: string;
   status: OrderStatus;
+  paymentStatus?: PaymentStatus;
   paymentMethod?: PaymentMethod;
+  customerName?: string;
+  customerEmail?: string;
   items: OrderSummaryItem[];
   subtotal: number;
   shippingFee: number;
