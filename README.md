@@ -94,7 +94,7 @@ Main project layout:
 1. Clone the repository.
 
 ```bash
-git clone <your-repo-url>
+git clone [<your-repo-url>](https://github.com/ngocan-dev/fashionshop-frontend.git)
 cd fashionshop-frontend
 ```
 
