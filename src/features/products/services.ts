@@ -36,8 +36,8 @@ export async function deleteProduct(id: string) {
   return apiRequest(Promise.resolve(response));
 }
 
-export async function fetchManageProducts() {
-  const response = await api.get<ApiResponse<Product[]>>('/api/products/manage');
+export async function fetchManageProducts(filter?: ProductFilter) {
+  const response = await api.get<ApiResponse<ApiListResponse<Product>>>('/api/products/manage', { params: filter });
   return apiRequest(Promise.resolve(response));
 }
 

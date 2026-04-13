@@ -24,8 +24,11 @@ export function useStoreProductQuery(idOrSlug: string) {
   return useQuery({ queryKey: queryKeys.product(idOrSlug), queryFn: () => fetchStoreProduct(idOrSlug), enabled: Boolean(idOrSlug) });
 }
 
-export function useManageProductsQuery() {
-  return useQuery({ queryKey: [...queryKeys.products, 'manage'], queryFn: fetchManageProducts });
+export function useManageProductsQuery(filter?: ProductFilter) {
+  return useQuery({ 
+    queryKey: [...queryKeys.products, 'manage', filter], 
+    queryFn: () => fetchManageProducts(filter) 
+  });
 }
 
 export function useManageProductQuery(id: string) {
