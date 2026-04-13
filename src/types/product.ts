@@ -26,6 +26,8 @@ export type ProductFilter = {
   keyword?: string;
   categoryId?: string;
   sortBy?: string;
+  page?: number;
+  size?: number;
 };
 
 export type UpsertProductRequest = {

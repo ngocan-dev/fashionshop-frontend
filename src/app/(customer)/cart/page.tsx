@@ -76,84 +76,84 @@ export default function CartPage() {
           {cart.items.map((item) => (
             <Card key={item.id} className="group rounded-xl border-[#c6c6c633] bg-white">
               <CardContent className="flex flex-col gap-8 p-6 md:flex-row">
-              <div className="aspect-[4/5] w-full flex-shrink-0 overflow-hidden bg-[#f3f3f4] md:w-48">
-                {item.product.images && item.product.images.length > 0 ? (
-                  <Image
-                    alt={item.product.images[0]?.alt || item.product.name}
-                    src={item.product.images[0].url}
-                    width={192}
-                    height={240}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                ) : (
-                  <div className="flex h-full w-full items-center justify-center bg-[#f3f3f4] text-4xl font-black uppercase">
-                    {item.product.name.charAt(0)}
-                  </div>
-                )}
-              </div>
-
-              <div className="flex flex-1 flex-col justify-between py-2">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <h3 className="font-headline text-2xl font-bold tracking-tight">{item.product.name}</h3>
-                    <p className="mt-1 text-[10px] uppercase tracking-[0.3em] text-[#777777]">
-                      {item.product.categoryName ?? 'Studio Essential'}
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => {
-                      if (hasBackendError) {
-                        toast.info('Cart data is unavailable right now.');
-                        return;
-                      }
-                      setConfirmItemId(item.id);
-                    }}
-                    className="hover:text-red-600 transition-colors ml-4"
-                    aria-label="Remove item"
-                  >
-                    <Trash2 className="h-5 w-5" />
-                  </button>
+                <div className="aspect-[4/5] w-full flex-shrink-0 overflow-hidden bg-[#f3f3f4] md:w-48">
+                  {item.product.images && item.product.images.length > 0 ? (
+                    <Image
+                      alt={item.product.images[0]?.alt || item.product.name}
+                      src={item.product.images[0].url}
+                      width={192}
+                      height={240}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center bg-[#f3f3f4] text-4xl font-black uppercase">
+                      {item.product.name.charAt(0)}
+                    </div>
+                  )}
                 </div>
 
-                <div className="mt-8 flex items-end justify-between">
-                  <div className="flex items-center space-x-6 rounded-md bg-[#f3f3f4] px-4 py-2">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
+                <div className="flex flex-1 flex-col justify-between py-2">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <h3 className="font-headline text-2xl font-bold tracking-tight">{item.product.name}</h3>
+                      <p className="mt-1 text-[10px] uppercase tracking-[0.3em] text-[#777777]">
+                        {item.product.categoryName ?? 'Studio Essential'}
+                      </p>
+                    </div>
+                    <button
                       onClick={() => {
                         if (hasBackendError) {
                           toast.info('Cart data is unavailable right now.');
                           return;
                         }
-                        quantityMutation.mutate({ itemId: item.id, quantity: Math.max(1, item.quantity - 1) });
+                        setConfirmItemId(item.id);
                       }}
-                      className="h-auto rounded-md p-1 hover:opacity-50"
-                      aria-label="Decrease quantity"
+                      className="hover:text-red-600 transition-colors ml-4"
+                      aria-label="Remove item"
                     >
-                      <span className="material-symbols-outlined text-sm">remove</span>
-                    </Button>
-                    <span className="w-8 text-center text-sm font-bold tabular-nums">{item.quantity.toString().padStart(2, '0')}</span>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => {
-                        if (hasBackendError) {
-                          toast.info('Cart data is unavailable right now.');
-                          return;
-                        }
-                        quantityMutation.mutate({ itemId: item.id, quantity: item.quantity + 1 });
-                      }}
-                      className="h-auto rounded-md p-1 hover:opacity-50"
-                      aria-label="Increase quantity"
-                    >
-                      <span className="material-symbols-outlined text-sm">add</span>
-                    </Button>
+                      <Trash2 className="h-5 w-5" />
+                    </button>
                   </div>
-                  <div className="font-headline text-xl font-bold">${(item.product.price * item.quantity).toFixed(2)}</div>
+
+                  <div className="mt-8 flex items-end justify-between">
+                    <div className="flex items-center space-x-6 rounded-md bg-[#f3f3f4] px-4 py-2">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          if (hasBackendError) {
+                            toast.info('Cart data is unavailable right now.');
+                            return;
+                          }
+                          quantityMutation.mutate({ itemId: item.id, quantity: Math.max(1, item.quantity - 1) });
+                        }}
+                        className="h-auto rounded-md p-1 hover:opacity-50"
+                        aria-label="Decrease quantity"
+                      >
+                        <span className="material-symbols-outlined text-sm">remove</span>
+                      </Button>
+                      <span className="w-8 text-center text-sm font-bold tabular-nums">{item.quantity.toString().padStart(2, '0')}</span>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          if (hasBackendError) {
+                            toast.info('Cart data is unavailable right now.');
+                            return;
+                          }
+                          quantityMutation.mutate({ itemId: item.id, quantity: item.quantity + 1 });
+                        }}
+                        className="h-auto rounded-md p-1 hover:opacity-50"
+                        aria-label="Increase quantity"
+                      >
+                        <span className="material-symbols-outlined text-sm">add</span>
+                      </Button>
+                    </div>
+                    <div className="font-headline text-xl font-bold">${(item.product.price * item.quantity).toFixed(2)}</div>
+                  </div>
                 </div>
-              </div>
               </CardContent>
             </Card>
           ))}
@@ -174,56 +174,51 @@ export default function CartPage() {
             </CardHeader>
             <CardContent className="space-y-8 px-8 py-8">
 
-            <div className="space-y-4">
-              <div className="flex justify-between text-sm">
-                <span className="text-[10px] font-bold uppercase tracking-[0.24em] text-[#5e5e5e]">Subtotal</span>
-                <span className="font-medium">${subtotal.toFixed(2)}</span>
+              <div className="space-y-4">
+                <div className="flex justify-between text-sm">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.24em] text-[#5e5e5e]">Subtotal</span>
+                  <span className="font-medium">${subtotal.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.24em] text-[#5e5e5e]">Shipping</span>
+                  <span className="font-medium">{shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.24em] text-[#5e5e5e]">Estimated Tax</span>
+                  <span className="font-medium">${tax.toFixed(2)}</span>
+                </div>
+                <div className="mt-4 flex justify-between border-t border-[#c6c6c633] pt-4">
+                  <span className="font-headline text-lg font-black uppercase tracking-[-0.04em]">Total</span>
+                  <span className="font-headline text-lg font-black">${total.toFixed(2)}</span>
+                </div>
               </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-[10px] font-bold uppercase tracking-[0.24em] text-[#5e5e5e]">Shipping</span>
-                <span className="font-medium">{shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-[10px] font-bold uppercase tracking-[0.24em] text-[#5e5e5e]">Estimated Tax</span>
-                <span className="font-medium">${tax.toFixed(2)}</span>
-              </div>
-              <div className="mt-4 flex justify-between border-t border-[#c6c6c633] pt-4">
-                <span className="font-headline text-lg font-black uppercase tracking-[-0.04em]">Total</span>
-                <span className="font-headline text-lg font-black">${total.toFixed(2)}</span>
-              </div>
-            </div>
 
-            <div className="space-y-3">
-              {hasBackendError && (
-                <Button asChild className="h-11 w-full rounded-md bg-black text-xs font-bold uppercase tracking-[0.24em] !text-white hover:bg-[#474747]">
-                  <Link href="/products" style={{ color: '#ffffff' }}>Browse Items</Link>
+              <div className="space-y-3">
+                {hasBackendError && (
+                  <Button asChild className="h-11 w-full rounded-md bg-black text-xs font-bold uppercase tracking-[0.24em] !text-white hover:bg-[#474747]">
+                    <Link href="/products" style={{ color: '#ffffff' }}>Browse Items</Link>
+                  </Button>
+                )}
+                <Button asChild className="h-11 w-full rounded-md bg-black text-xs font-bold uppercase tracking-[0.24em] !text-white transition-all duration-300 hover:scale-[1.02] hover:bg-[#474747] active:scale-95">
+                  <Link href="/checkout" style={{ color: '#ffffff' }}>Checkout</Link>
                 </Button>
-              )}
-              <Button asChild className="h-11 w-full rounded-md bg-black text-xs font-bold uppercase tracking-[0.24em] !text-white transition-all duration-300 hover:scale-[1.02] hover:bg-[#474747] active:scale-95">
-                <Link href="/checkout" style={{ color: '#ffffff' }}>Checkout</Link>
-              </Button>
-              <Button type="button" variant="outline" className="h-11 w-full rounded-md border-[#c6c6c64d] bg-white text-xs font-bold uppercase tracking-[0.24em] text-black hover:bg-[#f3f3f4]">
-                Update Cart
-              </Button>
-            </div>
-
-            <div className="mt-8 flex items-center gap-2 text-[#777777]">
-              <span className="material-symbols-outlined text-sm">lock</span>
-              <span className="text-[10px] font-medium uppercase tracking-[0.24em]">Secure Checkout</span>
-            </div>
-
-            <div className="mt-10">
-              <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.24em] text-[#5e5e5e]">Promo Code</label>
-              <div className="flex gap-2">
-                <input
-                  placeholder="ENTER CODE"
-                  className="flex-1 rounded-md bg-[#f3f3f4] px-4 py-3 text-[10px] tracking-[0.24em] outline-none ring-0"
-                />
-                <Button type="button" variant="ghost" className="h-auto rounded-md bg-[#e8e8e8] px-4 py-3 transition-colors hover:bg-[#e2e2e2]">
-                  <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                <Button type="button" variant="outline" className="h-11 w-full rounded-md border-[#c6c6c64d] bg-white text-xs font-bold uppercase tracking-[0.24em] text-black hover:bg-[#f3f3f4]">
+                  Update Cart
                 </Button>
               </div>
-            </div>
+
+              <div className="mt-10">
+                <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.24em] text-[#5e5e5e]">Promo Code</label>
+                <div className="flex gap-2">
+                  <input
+                    placeholder="ENTER CODE"
+                    className="flex-1 rounded-md bg-[#f3f3f4] px-4 py-3 text-[10px] tracking-[0.24em] outline-none ring-0"
+                  />
+                  <Button type="button" variant="ghost" className="h-auto rounded-md bg-[#e8e8e8] px-4 py-3 transition-colors hover:bg-[#e2e2e2]">
+                    <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                  </Button>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </div>

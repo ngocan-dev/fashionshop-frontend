@@ -2,33 +2,43 @@ import { api, apiRequest } from '@/lib/api/http';
 import type { ApiResponse } from '@/lib/api/types';
 import type { AuthUser } from '@/types/common';
 import type { CustomerAccount, StaffAccount, UpdateProfileRequest } from '@/types/user';
+import { mockUser, mockOrders } from '@/data/mock-data';
+
+// TODO: Remove mock helpers once the real backend is available
+const USE_MOCK = true;
 
 export async function fetchUserProfile() {
+  if (USE_MOCK) return mockUser;
   const response = await api.get<ApiResponse<AuthUser>>('/api/users/profile');
   return apiRequest(Promise.resolve(response));
 }
 
 export async function updateUserProfile(request: UpdateProfileRequest) {
+  if (USE_MOCK) return { ...mockUser, ...request };
   const response = await api.put<ApiResponse<AuthUser>>('/api/users/profile', request);
   return apiRequest(Promise.resolve(response));
 }
 
 export async function fetchMeUser() {
+  if (USE_MOCK) return mockUser;
   const response = await api.get<ApiResponse<AuthUser>>('/api/users/me');
   return apiRequest(Promise.resolve(response));
 }
 
 export async function fetchMe() {
+  if (USE_MOCK) return mockUser;
   const response = await api.get<ApiResponse<AuthUser>>('/api/me');
   return apiRequest(Promise.resolve(response));
 }
 
 export async function updateMe(request: UpdateProfileRequest) {
+  if (USE_MOCK) return { ...mockUser, ...request };
   const response = await api.put<ApiResponse<AuthUser>>('/api/me', request);
   return apiRequest(Promise.resolve(response));
 }
 
 export async function fetchMyOrders() {
+  if (USE_MOCK) return mockOrders as unknown[];
   const response = await api.get<ApiResponse<unknown[]>>('/api/me/orders');
   return apiRequest(Promise.resolve(response));
 }

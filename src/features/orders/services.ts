@@ -1,7 +1,11 @@
 import { api, apiRequest } from '@/lib/api/http';
-import type { ApiResponse } from '@/lib/api/types';
-import type { CheckoutSummary, CreateOrderRequest, Order } from '@/types/order';
+import type { ApiListResponse, ApiResponse } from '@/lib/api/types';
+import type { CheckoutSummary, CreateOrderRequest, Order, OrderFilter } from '@/types/order';
 import type { Payment } from '@/types/payment';
+import { mockOrders } from '@/data/mock-data';
+
+// TODO: Remove mock helpers once the real backend is available
+const USE_MOCK = true;
 
 export async function fetchCheckoutSummary() {
   const response = await api.get<ApiResponse<CheckoutSummary>>('/api/orders/checkout-summary');
@@ -19,11 +23,13 @@ export async function createOrder(request: CreateOrderRequest) {
 }
 
 export async function fetchMyOrders() {
+  if (USE_MOCK) return mockOrders;
   const response = await api.get<ApiResponse<Order[]>>('/api/orders/my');
   return apiRequest(Promise.resolve(response));
 }
 
 export async function fetchMyOrderHistory() {
+  if (USE_MOCK) return mockOrders;
   const response = await api.get<ApiResponse<Order[]>>('/api/orders/my/history');
   return apiRequest(Promise.resolve(response));
 }
@@ -53,8 +59,8 @@ export async function fetchOrders() {
   return apiRequest(Promise.resolve(response));
 }
 
-export async function fetchManageOrders() {
-  const response = await api.get<ApiResponse<Order[]>>('/api/orders/manage');
+export async function fetchManageOrders(filter?: OrderFilter) {
+  const response = await api.get<ApiResponse<ApiListResponse<Order>>>('/api/orders/manage', { params: filter });
   return apiRequest(Promise.resolve(response));
 }
 
