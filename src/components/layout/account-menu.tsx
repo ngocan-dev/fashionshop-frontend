@@ -10,10 +10,10 @@ type AccountMenuProps = {
 };
 
 const menuItems = [
-  { label: 'Profile', href: '/account' },
-  { label: 'Cart', href: '/cart' },
-  { label: 'Wishlist', href: '/wishlist' },
-  { label: 'Order', href: '/orders' },
+  { label: 'Profile', href: '/account', testId: 'customer-menu-profile' },
+  { label: 'Cart', href: '/cart', testId: 'customer-menu-cart' },
+  { label: 'Wishlist', href: '/wishlist', testId: 'customer-menu-wishlist' },
+  { label: 'Order', href: '/orders', testId: 'customer-menu-order' },
 ] as const;
 
 export function AccountMenu({ isLoggedIn, onLogout }: AccountMenuProps) {
@@ -72,12 +72,17 @@ export function AccountMenu({ isLoggedIn, onLogout }: AccountMenuProps) {
       </button>
 
       {isOpen ? (
-        <div className="absolute right-0 top-[calc(100%+0.5rem)] z-50 min-w-[160px] border border-zinc-200 bg-white p-1.5 shadow-[0_16px_40px_rgba(0,0,0,0.12)]" role="menu">
+        <div
+          className="absolute right-0 top-[calc(100%+0.5rem)] z-50 min-w-[160px] border border-zinc-200 bg-white p-1.5 shadow-[0_16px_40px_rgba(0,0,0,0.12)]"
+          role="menu"
+          data-testid="customer-menu"
+        >
           {menuItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               role="menuitem"
+              data-testid={item.testId}
               onClick={() => setIsOpen(false)}
               className="block px-3 py-2 text-sm font-medium text-zinc-700 transition hover:bg-zinc-100 hover:text-zinc-900"
             >
@@ -88,6 +93,7 @@ export function AccountMenu({ isLoggedIn, onLogout }: AccountMenuProps) {
           <button
             type="button"
             role="menuitem"
+            data-testid="customer-menu-logout"
             onClick={() => {
               setIsOpen(false);
               onLogout();
