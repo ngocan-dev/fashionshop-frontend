@@ -6,9 +6,6 @@ import { useRouter } from 'next/navigation';
 import { EmptyState } from '@/components/common/empty-state';
 import { LoadingState } from '@/components/common/loading-state';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { ProfileForm } from '@/features/users/components/profile-form';
-import { useUpdateMeMutation } from '@/features/users/hooks';
-import { toast } from 'sonner';
 import { useMeQuery } from '@/features/users/hooks';
 import { useMyOrdersQuery as useOrdersQueryFromOrders } from '@/features/orders/hooks';
 import { clearStoredSession } from '@/lib/auth/storage';
@@ -17,7 +14,6 @@ export default function AccountPage() {
   const router = useRouter();
   const meQuery = useMeQuery();
   const ordersQuery = useOrdersQueryFromOrders();
-  const updateMutation = useUpdateMeMutation();
   const hasBackendError = meQuery.isError || ordersQuery.isError;
 
   // Show loading state
@@ -38,7 +34,6 @@ export default function AccountPage() {
 
   const user = meQuery.data;
   const accountOrders = ordersQuery.data ?? [];
-  const recentOrder = accountOrders[0];
 
   return (
     <main className="mx-auto min-h-screen max-w-5xl px-6 py-10 font-body text-[#1a1c1c] md:px-12 lg:px-0 lg:py-14">
@@ -127,15 +122,7 @@ export default function AccountPage() {
                 <p className="text-base font-medium">English</p>
               </div>
             </div>
-            {!hasBackendError && user && (
-              <div className="border-t border-[#efefef] pt-8">
-                <p className="mb-4 text-[10px] font-bold uppercase tracking-[0.3em] text-[#777777]">Update Profile</p>
-                <ProfileForm
-                  user={user}
-                  onSubmit={(values) => updateMutation.mutate(values, { onSuccess: () => toast.success('Profile updated') })}
-                />
-              </div>
-            )}
+
           </CardContent>
         </Card>
 
@@ -195,36 +182,7 @@ export default function AccountPage() {
         </Card>
       </div>
 
-      {recentOrder && (
-        <>
-          <div className="mb-10 mt-24 text-center">
-            <h3 className="mb-4 text-[10px] font-bold uppercase tracking-[0.3em] text-[#777777]">Curated History</h3>
-            <div className="mx-auto h-[2px] w-12 bg-black" />
-          </div>
 
-          <section className="overflow-hidden rounded-xl bg-[#f3f3f4] p-1">
-            <div className="flex flex-col items-center justify-between gap-6 rounded-lg bg-white p-6 md:flex-row">
-              <div className="flex items-center gap-6">
-                <div className="h-24 w-20 overflow-hidden rounded bg-[#f3f3f4]">
-                  <div className="flex h-full w-full items-center justify-center bg-[#efefef] text-center text-xs font-bold uppercase tracking-[0.24em] text-[#777777]">
-                    {recentOrder.items[0]?.name ?? 'Order'}
-                  </div>
-                </div>
-                <div>
-                  <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.3em] text-[#777777]">Latest Order • {recentOrder.orderNumber || recentOrder.id}</p>
-                  <h4 className="font-headline font-bold">{recentOrder.items[0]?.name ?? 'Recent Purchase'}</h4>
-                  <p className="text-sm text-[#5e5e5e]">
-                    {recentOrder.status.charAt(0) + recentOrder.status.slice(1).toLowerCase()} on {new Date(recentOrder.createdAt ?? new Date()).toLocaleDateString()}
-                  </p>
-                </div>
-              </div>
-              <Link href={`/orders/${recentOrder.id}`} className="w-full rounded-md bg-black px-6 py-3 text-center text-[10px] font-bold uppercase tracking-[0.3em] text-white md:w-auto">
-                Track Package
-              </Link>
-            </div>
-          </section>
-        </>
-      )}
     </main>
   );
 }

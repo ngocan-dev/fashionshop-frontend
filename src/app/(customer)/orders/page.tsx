@@ -62,7 +62,7 @@ export default function OrdersPage() {
             key={status}
             onClick={() => setFilterStatus(status)}
             variant={filterStatus === status ? 'default' : 'outline'}
-            className={`rounded-md px-6 py-2 text-sm font-bold uppercase tracking-[0.24em] transition-all duration-200 ${filterStatus === status ? 'bg-black text-white hover:scale-105 hover:bg-black' : 'border-0 bg-[#e2e2e2] text-[#1a1c1c] hover:bg-[#d8d8d8]'}`}
+            className={`rounded-md px-6 py-2 text-sm font-bold uppercase tracking-[0.24em] transition-all duration-200 ${filterStatus === status ? 'bg-black !text-white hover:scale-105 hover:bg-black' : 'border-0 bg-[#e2e2e2] text-[#1a1c1c] hover:bg-[#d8d8d8]'}`}
           >
             {status.charAt(0).toUpperCase() + status.slice(1)}
           </Button>
@@ -124,7 +124,7 @@ export default function OrdersPage() {
               {
                 header: 'Action',
                 cell: (order) => (
-                  <Button asChild size="sm" className="rounded-md bg-black text-white hover:bg-[#474747]">
+                  <Button asChild size="sm" className="rounded-md bg-black !text-white hover:bg-[#474747]">
                     <Link href={`/orders/${order.id}`}>View Details</Link>
                   </Button>
                 ),
@@ -154,13 +154,6 @@ export default function OrdersPage() {
         </div>
       )}
 
-      {!hasBackendError && filteredOrders.length > 0 && (
-        <div className="mt-20 text-center">
-          <Button type="button" variant="ghost" className="h-auto rounded-none border-b-2 border-black p-0 pb-2 text-sm font-bold uppercase tracking-[0.24em] hover:bg-transparent hover:opacity-50">
-            Load Older Orders
-          </Button>
-        </div>
-      )}
     </main>
   );
 }

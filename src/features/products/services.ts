@@ -1,6 +1,10 @@
 import { api, apiRequest } from '@/lib/api/http';
 import type { ApiResponse } from '@/lib/api/types';
 import type { Product, ProductFilter, UpsertProductRequest } from '@/types/product';
+import { allMockProducts } from '@/data/mock-data';
+
+// TODO: Remove mock helpers once the real backend is available
+const USE_MOCK = true;
 
 export async function fetchProducts(filter?: ProductFilter) {
   const response = await api.get<ApiResponse<Product[]>>('/api/products', { params: filter });
@@ -58,6 +62,11 @@ export async function fetchStoreProducts(filter?: ProductFilter) {
 }
 
 export async function fetchStoreProduct(idOrSlug: string) {
+  if (USE_MOCK) {
+    const found = allMockProducts.find((p) => p.id === idOrSlug || p.slug === idOrSlug);
+    if (!found) throw new Error('Product not found');
+    return found;
+  }
   const response = await api.get<ApiResponse<Product>>(`/api/store/products/${idOrSlug}`);
   return apiRequest(Promise.resolve(response));
 }

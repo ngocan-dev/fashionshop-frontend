@@ -12,6 +12,7 @@ type AccountMenuProps = {
 const menuItems = [
   { label: 'Profile', href: '/account' },
   { label: 'Cart', href: '/cart' },
+  { label: 'Wishlist', href: '/wishlist' },
   { label: 'Order', href: '/orders' },
 ] as const;
 
