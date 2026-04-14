@@ -44,7 +44,7 @@ export function PoliciesPageContent() {
 
               <div className="overflow-hidden rounded-xl border border-zinc-200">
                 <div className="relative aspect-[16/10]">
-                  <Image src="/images/policies-editorial.svg" alt="Editorial policy visual" fill className="object-cover" />
+                  <Image src="/images/policies-shipping.jpg" alt="Shipping and logistics" fill className="object-cover" />
                 </div>
               </div>
             </PolicySection>

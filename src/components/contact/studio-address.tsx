@@ -11,7 +11,7 @@ export function StudioAddress() {
       </address>
       <div className="overflow-hidden rounded-md border border-zinc-200">
         <div className="relative aspect-[16/10]">
-          <Image src="/images/contact-studio.jpg" alt="18.STUDIO Paris storefront" fill className="object-cover" />
+          <Image src="/images/contact-studio.png" alt="HCMIU Thu Duc campus" fill className="object-cover" />
         </div>
       </div>
     </section>

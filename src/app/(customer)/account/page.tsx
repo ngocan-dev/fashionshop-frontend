@@ -2,16 +2,13 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import { EmptyState } from '@/components/common/empty-state';
 import { LoadingState } from '@/components/common/loading-state';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { useMeQuery } from '@/features/users/hooks';
 import { useMyOrdersQuery as useOrdersQueryFromOrders } from '@/features/orders/hooks';
-import { clearStoredSession } from '@/lib/auth/storage';
 
 export default function AccountPage() {
-  const router = useRouter();
   const meQuery = useMeQuery();
   const ordersQuery = useOrdersQueryFromOrders();
   const hasBackendError = meQuery.isError || ordersQuery.isError;
@@ -82,16 +79,6 @@ export default function AccountPage() {
               <Link href="/account/edit" className="rounded-md bg-black px-8 py-3 text-sm font-bold uppercase tracking-[0.24em] !text-white transition-all duration-200 hover:scale-105 hover:bg-[#474747] hover:!text-white" style={{ color: '#ffffff' }}>
                 Edit Profile
               </Link>
-              <button
-                type="button"
-                onClick={() => {
-                  clearStoredSession();
-                  router.push('/auth');
-                }}
-                className="rounded-md border border-[#e6e6e6] bg-white px-8 py-3 text-sm font-bold uppercase tracking-[0.24em] text-black transition-all duration-200 hover:bg-[#f9f9f9]"
-              >
-                Logout
-              </button>
             </div>
           </div>
         </div>
@@ -142,44 +129,7 @@ export default function AccountPage() {
           </div>
         </section>
 
-        <Card className="editorial-shadow overflow-hidden rounded-xl border-0 bg-white md:col-span-6">
-          <CardHeader className="mb-0 flex items-center justify-between border-b border-[#efefef] px-8 py-6">
-            <h2 className="font-headline text-2xl font-bold uppercase tracking-tight">Address Book</h2>
-            <Link href="/checkout" className="border-b-2 border-black pb-1 text-[10px] font-black uppercase tracking-[0.3em]">
-              Manage
-            </Link>
-          </CardHeader>
-          <CardContent className="space-y-6 px-8 py-8">
-            <div className="flex gap-4">
-              <span className="material-symbols-outlined mt-1 text-[#777777]">home</span>
-              <div>
-                <p className="mb-1 text-xs font-bold uppercase tracking-[0.24em]">Default Shipping</p>
-                <p className="text-sm leading-relaxed text-[#5e5e5e]">No default address saved</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
 
-        <Card className="editorial-shadow overflow-hidden rounded-xl border-0 bg-white md:col-span-6">
-          <CardHeader className="mb-0 flex items-center justify-between border-b border-[#efefef] px-8 py-6">
-            <h2 className="font-headline text-2xl font-bold uppercase tracking-tight">Payment</h2>
-            <Link href="/checkout" className="border-b-2 border-black pb-1 text-[10px] font-black uppercase tracking-[0.3em]">
-              Add New
-            </Link>
-          </CardHeader>
-          <CardContent className="space-y-6 px-8 py-8">
-            <div className="flex items-center justify-between rounded-lg bg-[#f3f3f4] p-4">
-              <div className="flex items-center gap-4">
-                <span className="material-symbols-outlined text-black">credit_card</span>
-                <div>
-                  <p className="text-sm font-bold">No payment method saved</p>
-                  <p className="text-[10px] uppercase tracking-[0.3em] text-[#777777]">Add a payment method</p>
-                </div>
-              </div>
-              <span className="material-symbols-outlined text-[#c6c6c6]">chevron_right</span>
-            </div>
-          </CardContent>
-        </Card>
       </div>
 
 
