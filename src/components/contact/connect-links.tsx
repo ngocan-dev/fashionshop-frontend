@@ -26,7 +26,7 @@ export function ConnectLinks() {
       </div>
       <div className="overflow-hidden rounded-md border border-zinc-200">
         <div className="relative aspect-[16/10]">
-          <Image src="/images/contact-texture.jpg" alt="Editorial textile texture" fill className="object-cover" />
+          <Image src="/images/contact-texture.png" alt="HCMIU Pasteur campus" fill className="object-cover" />
         </div>
       </div>
     </section>

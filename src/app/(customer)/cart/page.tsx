@@ -207,18 +207,7 @@ export default function CartPage() {
                 </Button>
               </div>
 
-              <div className="mt-10">
-                <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.24em] text-[#5e5e5e]">Promo Code</label>
-                <div className="flex gap-2">
-                  <input
-                    placeholder="ENTER CODE"
-                    className="flex-1 rounded-md bg-[#f3f3f4] px-4 py-3 text-[10px] tracking-[0.24em] outline-none ring-0"
-                  />
-                  <Button type="button" variant="ghost" className="h-auto rounded-md bg-[#e8e8e8] px-4 py-3 transition-colors hover:bg-[#e2e2e2]">
-                    <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                  </Button>
-                </div>
-              </div>
+
             </CardContent>
           </Card>
         </div>
