@@ -2,16 +2,13 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import { EmptyState } from '@/components/common/empty-state';
 import { LoadingState } from '@/components/common/loading-state';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { useMeQuery } from '@/features/users/hooks';
 import { useMyOrdersQuery as useOrdersQueryFromOrders } from '@/features/orders/hooks';
-import { clearStoredSession } from '@/lib/auth/storage';
 
 export default function AccountPage() {
-  const router = useRouter();
   const meQuery = useMeQuery();
   const ordersQuery = useOrdersQueryFromOrders();
   const hasBackendError = meQuery.isError || ordersQuery.isError;
@@ -82,16 +79,6 @@ export default function AccountPage() {
               <Link href="/account/edit" className="rounded-md bg-black px-8 py-3 text-sm font-bold uppercase tracking-[0.24em] !text-white transition-all duration-200 hover:scale-105 hover:bg-[#474747] hover:!text-white" style={{ color: '#ffffff' }}>
                 Edit Profile
               </Link>
-              <button
-                type="button"
-                onClick={() => {
-                  clearStoredSession();
-                  router.push('/auth');
-                }}
-                className="rounded-md border border-[#e6e6e6] bg-white px-8 py-3 text-sm font-bold uppercase tracking-[0.24em] text-black transition-all duration-200 hover:bg-[#f9f9f9]"
-              >
-                Logout
-              </button>
             </div>
           </div>
         </div>
