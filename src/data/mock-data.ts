@@ -9,7 +9,7 @@ import type { Order } from '@/types/order';
 import type { Product } from '@/types/product';
 import type { WishlistItem } from '@/types/wishlist';
 
-// ─── Products (reused across cart & orders) ─────────────────────────────────
+//  Products (reused across cart & orders) 
 
 export const mockProducts: Product[] = [
     {
@@ -84,8 +84,7 @@ export const mockProducts: Product[] = [
     },
 ];
 
-// ─── Mock User ──────────────────────────────────────────────────────────────
-
+//  Mock User 
 export const mockUser: AuthUser = {
     id: 'usr_001',
     email: 'jane.doe@18studio.com',
@@ -95,8 +94,7 @@ export const mockUser: AuthUser = {
     avatarUrl: undefined,
 };
 
-// ─── Mock Cart ──────────────────────────────────────────────────────────────
-
+//  Mock Cart 
 export const mockCart: Cart = {
     id: 'cart_001',
     items: [
@@ -125,7 +123,7 @@ export const mockCart: Cart = {
     total: 1450.0 + 890.0 * 2 + 1120.0,
 };
 
-// ─── Mock Orders ────────────────────────────────────────────────────────────
+//  Mock Orders 
 
 export const mockOrders: Order[] = [
     {
@@ -202,7 +200,7 @@ export const mockOrders: Order[] = [
     },
 ];
 
-// ─── Shop Catalog Products (matches the listing page IDs) ───────────────────
+// Shop Catalog Products (matches the listing page IDs) 
 
 export const mockCatalogProducts: Product[] = [
     { id: 'modular-tech-parka', slug: 'modular-tech-parka', name: 'Modular Tech Parka', description: 'A storm-ready parka with detachable quilted liner and articulated hood. Built for function, styled for the city.', price: 840, stock: 15, categoryName: 'Outerwear', images: [{ url: '/images/product-blazer.svg', alt: 'Modular Tech Parka' }], colors: ['Black', 'Orange'], sizes: ['S', 'M', 'L', 'XL'], active: true },
@@ -233,7 +231,7 @@ export const mockCatalogProducts: Product[] = [
 /** All mock products combined (original + shop catalog) */
 export const allMockProducts: Product[] = [...mockProducts, ...mockCatalogProducts];
 
-// ─── Mock Wishlist ──────────────────────────────────────────────────────────
+//  Mock Wishlist 
 
 export const mockWishlist: WishlistItem[] = [
     { productId: 'prod_005', name: 'Minimal Wool Overcoat', price: 2200.0, slug: 'minimal-wool-overcoat', imageUrl: '/images/category-outerwear.svg' },

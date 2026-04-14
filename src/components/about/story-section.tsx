@@ -24,7 +24,7 @@ export function StorySection() {
 
       <div className="order-1 relative overflow-hidden rounded-xl border border-zinc-200 bg-zinc-100 lg:order-2">
         <div className="relative aspect-[4/5]">
-          <Image src="/images/about-story.svg" alt="18.STUDIO story close-up" fill className="object-cover" />
+          <Image src="/images/about-story.jpg" alt="18.STUDIO story close-up" fill className="object-cover" />
         </div>
       </div>
     </section>
