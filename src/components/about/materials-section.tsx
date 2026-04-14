@@ -12,19 +12,19 @@ const materials: MaterialItem[] = [
     id: 'silk-gauze',
     title: '01 - Silk Gauze',
     description: 'Floating silhouettes achieved through 100% organic mulberry silk.',
-    image: '/images/about-material-silk.svg',
+    image: '/images/about-material-silk.jpg',
   },
   {
     id: 'architectural-cotton',
     title: '02 - Architectural Cotton',
     description: 'A dense, structural weave that holds shape even after years of wear.',
-    image: '/images/about-material-cotton.svg',
+    image: '/images/about-material-cotton.jpg',
   },
   {
     id: 'merino-wool',
     title: '03 - Merino Wool',
     description: 'Temperature-regulating fibers treated with a carbon-neutral wash.',
-    image: '/images/about-material-wool.svg',
+    image: '/images/about-material-wool.jpg',
   },
 ];
 

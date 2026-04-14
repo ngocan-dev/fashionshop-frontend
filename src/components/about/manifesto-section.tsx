@@ -6,7 +6,7 @@ export function ManifestoSection() {
       <div className="relative overflow-hidden rounded-xl border border-zinc-200 bg-zinc-100">
         <div className="relative aspect-[4/5]">
           <Image
-            src="/images/about-manifesto.svg"
+            src="/images/about-manifesto.jpg"
             alt="18.STUDIO manifesto portrait"
             fill
             className="object-cover"

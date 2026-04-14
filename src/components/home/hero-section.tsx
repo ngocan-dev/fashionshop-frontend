@@ -6,7 +6,7 @@ export function HeroSection() {
     <section className="border-b border-zinc-300 bg-zinc-100">
       <div className="relative mx-auto min-h-[70svh] w-full max-w-[1440px] px-6 py-10 md:min-h-[82svh] md:px-8 lg:px-12">
         <Image
-          src="/images/hero-fashion.svg"
+          src="/images/hero-fashion.jpg"
           alt="18 STUDIO campaign look"
           fill
           priority
