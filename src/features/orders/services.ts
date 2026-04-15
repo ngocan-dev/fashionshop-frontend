@@ -2,12 +2,29 @@ import { api, apiRequest } from '@/lib/api/http';
 import type { ApiListResponse, ApiResponse } from '@/lib/api/types';
 import type { CheckoutSummary, CreateOrderRequest, Order, OrderFilter } from '@/types/order';
 import type { Payment } from '@/types/payment';
-import { mockOrders, getMockOrder } from '@/data/mock-data';
+import { mockOrders, getMockOrder, mockCart } from '@/data/mock-data';
 
 // TODO: Remove mock helpers once the real backend is available
 const USE_MOCK = true;
 
-export async function fetchCheckoutSummary() {
+export async function fetchCheckoutSummary(): Promise<CheckoutSummary> {
+  if (USE_MOCK) {
+    return {
+      items: mockCart.items.map((ci) => ({
+        productId: ci.productId,
+        name: ci.product.name,
+        quantity: ci.quantity,
+        price: ci.product.price,
+        total: ci.product.price * ci.quantity,
+        imageUrl: ci.product.images?.[0]?.url,
+      })),
+      subtotal: mockCart.subtotal,
+      shippingFee: mockCart.shippingFee,
+      discount: mockCart.discount,
+      total: mockCart.total,
+      paymentMethod: 'COD',
+    };
+  }
   const response = await api.get<ApiResponse<CheckoutSummary>>('/api/orders/checkout-summary');
   return apiRequest(Promise.resolve(response));
 }
@@ -18,6 +35,18 @@ export async function updateCheckoutPaymentMethod(paymentMethod: string) {
 }
 
 export async function createOrder(request: CreateOrderRequest) {
+  if (USE_MOCK) {
+    return {
+      id: `ORD-${Date.now()}`,
+      status: 'PENDING',
+      paymentMethod: request.paymentMethod,
+      shippingAddress: request.shippingAddress,
+      note: request.note ?? '',
+      items: [],
+      total: 0,
+      createdAt: new Date().toISOString(),
+    } as unknown as Order;
+  }
   const response = await api.post<ApiResponse<Order>>('/api/orders', request);
   return apiRequest(Promise.resolve(response));
 }

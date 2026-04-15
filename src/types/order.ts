@@ -2,7 +2,7 @@ export type OrderStatus = 'PENDING' | 'CONFIRMED' | 'PROCESSING' | 'SHIPPED' | '
 
 export type PaymentStatus = 'PENDING' | 'PAID' | 'FAILED' | 'REFUNDED';
 
-export type PaymentMethod = 'COD' | 'CARD' | 'BANK_TRANSFER' | 'E_WALLET';
+export type PaymentMethod = 'COD' | 'CARD' | 'BANK_TRANSFER' | 'E_WALLET' | 'MOMO';
 
 export type OrderFilter = {
   keyword?: string;
