@@ -8,11 +8,11 @@ import { clearSessionAndRedirect, useAuthSession } from '@/features/auth/store';
 const navigationByRole = {
   STAFF: [
     { href: '/staff/products', label: 'Products', icon: 'inventory_2' },
-    { href: '/staff/categories', label: 'Categories', icon: 'warehouse' },
+    //{ href: '/staff/categories', label: 'Categories', icon: 'warehouse' },
     { href: '/staff/orders', label: 'Orders', icon: 'shopping_bag' },
   ],
   ADMIN: [
-    { href: '/admin/dashboard', label: 'Dashboard', icon: 'dashboard' },
+    //{ href: '/admin/dashboard', label: 'Dashboard', icon: 'dashboard' },
     { href: '/admin/products', label: 'Products', icon: 'inventory_2' },
     { href: '/admin/orders', label: 'Orders', icon: 'shopping_bag' },
     { href: '/admin/customers', label: 'Customers', icon: 'group' },
@@ -32,7 +32,7 @@ export function RoleShell({ role, children }: { role: 'STAFF' | 'ADMIN'; childre
         <aside className="fixed left-0 top-0 h-screen w-64 border-r border-outline-variant bg-surface-container-low flex flex-col py-8 font-headline tracking-tighter text-sm z-50">
           <div className="px-6 mb-12">
             <h1 className="text-xl font-bold tracking-widest text-primary uppercase">18 Studio</h1>
-            <p className="text-[10px] tracking-[0.2em] opacity-50 uppercase mt-1">Admin Console</p>
+            <p className="text-[10px] tracking-[0.2em] opacity-50 uppercase mt-1">Shop Console</p>
           </div>
           
           <nav className="flex-1 space-y-1">
@@ -82,7 +82,7 @@ export function RoleShell({ role, children }: { role: 'STAFF' | 'ADMIN'; childre
 
         <div className="flex min-h-screen flex-1 flex-col ml-64">
           {/* TOP NAV BAR */}
-          <header className="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 bg-white/70 backdrop-blur-xl flex justify-between items-center px-8 z-40 font-body text-sm tracking-tight border-b border-surface-container">
+          {/* <header className="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 bg-white/70 backdrop-blur-xl flex justify-between items-center px-8 z-40 font-body text-sm tracking-tight border-b border-surface-container">
             <div className="flex items-center gap-4 w-1/3">
               <div className="relative w-full focus-within:ring-1 focus-within:ring-primary transition-all rounded-md">
                 <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-sm">search</span>
@@ -107,7 +107,7 @@ export function RoleShell({ role, children }: { role: 'STAFF' | 'ADMIN'; childre
                 Profile
               </button>
             </div>
-          </header>
+          </header> */}
 
           <main className="flex-1 mt-16 p-10 min-h-screen bg-surface">
             {children}

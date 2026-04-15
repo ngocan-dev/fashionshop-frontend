@@ -10,9 +10,22 @@ type DataTableProps<T> = {
   columns: Column<T>[];
   data: T[];
   emptyLabel?: string;
+  isLoading?: boolean;
 };
 
-export function DataTable<T>({ columns, data, emptyLabel = 'No records found' }: DataTableProps<T>) {
+export function DataTable<T>({ columns, data, emptyLabel = 'No records found', isLoading }: DataTableProps<T>) {
+  if (isLoading) {
+    return (
+      <div className="rounded-3xl border border-border bg-card px-6 py-10 text-sm text-muted-foreground animate-pulse">
+        <div className="space-y-4">
+          <div className="h-4 bg-neutral-100 rounded w-full" />
+          <div className="h-4 bg-neutral-100 rounded w-full" />
+          <div className="h-4 bg-neutral-100 rounded w-full" />
+        </div>
+      </div>
+    );
+  }
+
   if (!data.length) {
     return <div className="rounded-3xl border border-dashed border-border bg-card px-6 py-10 text-sm text-muted-foreground">{emptyLabel}</div>;
   }

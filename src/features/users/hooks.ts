@@ -1,7 +1,7 @@
 'use client';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { createStaffAccount, deleteAdminAccount, deleteAdminAccountByEmail, deleteAdminUser, fetchAdminCustomerAccounts, fetchAdminStaffAccounts, fetchCustomerAccounts, fetchMe, fetchMeUser, fetchMyOrders, fetchStaffAccounts, fetchUserProfile, updateMe, updateUserProfile } from './services';
+import { activateAdminUser, createStaffAccount, updateStaffAccount, deleteAdminAccount, deleteAdminAccountByEmail, deleteAdminUser, fetchAdminCustomerAccounts, fetchAdminStaffAccounts, fetchCustomerAccounts, fetchMe, fetchMeUser, fetchMyOrders, fetchStaffAccounts, fetchUserProfile, updateMe, updateUserProfile } from './services';
 import { queryKeys } from '@/lib/api/query-keys';
 
 export function useUserProfileQuery() {
@@ -66,10 +66,31 @@ export function useCreateStaffAccountMutation() {
   });
 }
 
+export function useUpdateStaffAccountMutation(id: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: Parameters<typeof updateStaffAccount>[1]) => updateStaffAccount(id, data),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['admin', 'staff-accounts'] });
+    },
+  });
+}
+
 export function useDeleteAdminUserMutation() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteAdminUser,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['admin', 'staff-accounts'] });
+      await queryClient.invalidateQueries({ queryKey: ['admin', 'customer-accounts'] });
+    },
+  });
+}
+
+export function useActivateAdminUserMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: activateAdminUser,
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['admin', 'staff-accounts'] });
       await queryClient.invalidateQueries({ queryKey: ['admin', 'customer-accounts'] });

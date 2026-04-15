@@ -3,6 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createProduct, deleteManageProduct, deleteProduct, fetchManageProduct, fetchManageProducts, fetchProduct, fetchProducts, fetchStoreProduct, fetchStoreProducts, searchProducts, updateManageProduct, updateProduct } from './services';
 import { queryKeys } from '@/lib/api/query-keys';
+import type { ProductFilter } from '@/types/product';
 
 export function useProductsQuery() {
   return useQuery({ queryKey: queryKeys.products, queryFn: () => fetchProducts() });

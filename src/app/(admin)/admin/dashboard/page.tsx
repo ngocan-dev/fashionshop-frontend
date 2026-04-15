@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { LoadingState } from '@/components/common/loading-state';
-import { EmptyState } from '@/components/common/empty-state';
+//import { LoadingState } from '@/components/common/loading-state';
+//import { EmptyState } from '@/components/common/empty-state';
 import { useDashboardQuery } from '@/features/dashboard/hooks';
 import { DashboardView } from '@/features/dashboard/components/dashboard-view';
 
@@ -16,9 +16,6 @@ export default function AdminDashboardPage() {
   const [from, setFrom] = useState(currentDate(-30));
   const [to, setTo] = useState(currentDate());
   const query = useDashboardQuery(from, to);
-
-  if (query.isLoading) return <LoadingState label="Loading dashboard" />;
-  if (!query.data) return <EmptyState title="Dashboard unavailable" />;
 
   return (
     <div className="space-y-6">
@@ -55,7 +52,7 @@ export default function AdminDashboardPage() {
         </div>
       </div>
 
-      <DashboardView data={query.data} />
+      <DashboardView data={query.data} isLoading={query.isLoading} />
     </div>
   );
 }
