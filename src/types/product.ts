@@ -6,25 +6,26 @@ export type ProductImage = {
 
 export type Product = {
   id: string;
-  slug?: string;
   name: string;
   description?: string;
   price: number;
-  color?: string;
-  size?: string;
+  stockQuantity: number;
+  categoryId?: number;
+  categoryName?: string;
+  imageUrl?: string;
+  images?: ProductImage[];
+  isActive: boolean;
+  isFeatured: boolean;
+  slug?: string;
+  stock?: number;
+  compareAtPrice?: number;
   colors?: string[];
   sizes?: string[];
-  compareAtPrice?: number;
-  stock: number;
-  categoryId?: string;
-  categoryName?: string;
-  images: ProductImage[];
-  active?: boolean;
 };
 
 export type ProductFilter = {
   keyword?: string;
-  categoryId?: string;
+  categoryId?: number;
   sortBy?: string;
   page?: number;
   size?: number;
@@ -32,12 +33,12 @@ export type ProductFilter = {
 
 export type UpsertProductRequest = {
   name: string;
-  slug?: string;
   description?: string;
   price: number;
-  compareAtPrice?: number;
-  stock: number;
-  categoryId?: string;
-  imageUrls: string[];
-  active?: boolean;
+  stockQuantity: number;
+  categoryId?: number;
+  imageUrl?: string;
+  isActive: boolean;
+  isFeatured: boolean;
+  slug?: string;
 };

@@ -14,4 +14,5 @@ export type AuthUser = {
   role: Role;
   phoneNumber?: string;
   avatarUrl?: string;
+  isActive?: boolean;
 };

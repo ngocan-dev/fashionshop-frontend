@@ -77,10 +77,10 @@ export default function CartPage() {
             <Card key={item.id} className="group rounded-xl border-[#c6c6c633] bg-white">
               <CardContent className="flex flex-col gap-8 p-6 md:flex-row">
                 <div className="aspect-[4/5] w-full flex-shrink-0 overflow-hidden bg-[#f3f3f4] md:w-48">
-                  {item.product.images && item.product.images.length > 0 ? (
+                  {item.product.imageUrl ? (
                     <Image
-                      alt={item.product.images[0]?.alt || item.product.name}
-                      src={item.product.images[0].url}
+                      alt={item.product.name}
+                      src={item.product.imageUrl}
                       width={192}
                       height={240}
                       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"

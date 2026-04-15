@@ -10,7 +10,7 @@ type Props = {
   params: Promise<{ id: string }>;
 };
 
-export default function StaffEditProductPage({ params }: Props) {
+export default function EditProductPage({ params }: Props) {
   const { id } = use(params);
   const { data: product, isLoading, error } = useManageProductQuery(id);
 
@@ -23,7 +23,7 @@ export default function StaffEditProductPage({ params }: Props) {
           title="Product Not Found" 
           description="The product you are trying to edit does not exist or has been removed."
           actionLabel="Back to Catalog"
-          actionHref="/staff/products"
+          actionHref="/admin/products"
         />
       </div>
     );

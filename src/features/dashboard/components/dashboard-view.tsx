@@ -1,7 +1,29 @@
 import type { DashboardPayload } from '@/types/dashboard';
 import { cn } from '@/lib/utils/cn';
 
-export function DashboardView({ data }: { data: DashboardPayload }) {
+export function DashboardView({ data, isLoading }: { data?: DashboardPayload; isLoading?: boolean }) {
+  if (isLoading || !data) {
+    return (
+      <div className="space-y-12 animate-pulse">
+        {/* Skeleton Summary Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/30 shadow-sm h-32" />
+          ))}
+        </div>
+
+        {/* Skeleton Middle Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div className="lg:col-span-8 bg-surface-container-lowest p-8 rounded-xl border border-outline-variant/30 h-96" />
+          <div className="lg:col-span-4 space-y-6">
+             <div className="bg-secondary-container p-6 rounded-xl h-40" />
+             <div className="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/30 h-40" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const metrics = [
     { label: 'Total Revenue', value: `$${data.summary.totalSales.toLocaleString()}`, icon: 'payments', trend: '+12.5%', color: 'text-green-600 bg-green-50' },
     { label: 'Total Orders', value: data.summary.totalOrders.toLocaleString(), icon: 'shopping_cart', trend: '+8.2%', color: 'text-green-600 bg-green-50' },

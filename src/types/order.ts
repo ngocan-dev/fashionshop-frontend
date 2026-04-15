@@ -17,6 +17,7 @@ export type OrderSummaryItem = {
   quantity: number;
   price: number;
   total: number;
+  imageUrl?: string;
 };
 
 export type Order = {
@@ -27,12 +28,23 @@ export type Order = {
   paymentMethod?: PaymentMethod;
   customerName?: string;
   customerEmail?: string;
+  customerAvatar?: string;
+  customerTotalOrders?: number;
   items: OrderSummaryItem[];
   subtotal: number;
   shippingFee: number;
   discount: number;
   total: number;
   createdAt?: string;
+
+  // New fields for details UI
+  shippingAddress?: string;
+  note?: string;
+  activityLog?: Array<{
+    status: string;
+    timestamp: string;
+    isPrimary?: boolean;
+  }>;
 };
 
 export type CheckoutSummary = {
