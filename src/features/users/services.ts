@@ -51,8 +51,6 @@ export async function createStaffAccount(request: { fullName: string; email: str
       fullName: request.fullName,
       role: (request.role as any) || 'STAFF',
       isActive: true,
-      lastLogin: new Date().toISOString(),
-      permissions: ['Manage Products']
     };
     mockStaff.push(newStaff);
     return newStaff;

@@ -75,7 +75,9 @@ export default function StaffOrdersPage() {
                 <td className="px-6 py-5">
                   <div className="flex flex-col">
                     <span className="font-bold text-black font-mono">#{order.orderNumber || order.id.substring(0, 8)}</span>
-                    <span className="text-[10px] text-neutral-400 uppercase tracking-tighter">{new Date(order.createdAt).toLocaleDateString()}</span>
+                    <span className="text-[10px] text-neutral-400 uppercase tracking-tighter">
+                      {order.createdAt ? new Date(order.createdAt).toLocaleDateString() : 'N/A'}
+                    </span>
                   </div>
                 </td>
                 <td className="px-6 py-5">
@@ -120,8 +122,10 @@ export default function StaffOrdersPage() {
       {!isLoading && totalPages > 1 && (
         <div className="flex justify-center pt-8">
           <Pagination 
-            currentPage={page + 1}
+            page={page + 1}
             totalPages={totalPages}
+            pageSize={pageSize}
+            totalItems={data?.total || 0}
             onPageChange={(p) => setPage(p - 1)}
           />
         </div>

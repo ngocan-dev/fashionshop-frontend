@@ -30,7 +30,7 @@ export async function addWishlistItem(productId: string) {
         name: product?.name ?? 'Unknown Product',
         price: product?.price ?? 0,
         slug: product?.slug,
-        imageUrl: product?.images[0]?.url,
+        imageUrl: product?.images?.[0]?.url,
       });
     }
     return [...wishlistStore];

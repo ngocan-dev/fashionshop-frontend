@@ -4,10 +4,12 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
 export function ProductCard({ product }: { product: Product }) {
+  const primaryImage = product.images?.[0];
+
   return (
     <Card className="overflow-hidden">
       <div className="aspect-[4/5] bg-gradient-to-br from-brand-50 to-muted">
-        {product.images[0] ? <img src={product.images[0].url} alt={product.images[0].alt ?? product.name} className="h-full w-full object-cover" /> : null}
+        {primaryImage ? <img src={primaryImage.url} alt={primaryImage.alt ?? product.name} className="h-full w-full object-cover" /> : null}
       </div>
       <CardContent className="space-y-3">
         <div className="flex items-start justify-between gap-3">
